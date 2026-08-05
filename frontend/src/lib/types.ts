@@ -1,0 +1,72 @@
+export type StockStatus = 'in_stock' | 'low_stock' | 'preorder' | 'sold_out';
+
+export interface Category {
+  id: string;
+  name: string;
+  slug: string;
+  description?: string;
+  display_order: number;
+  created_at?: string;
+}
+
+export interface ProductImage {
+  id: string;
+  product_id: string;
+  url: string;
+  alt_text?: string;
+  is_primary: boolean;
+  display_order: number;
+}
+
+export interface ProductDetails {
+  brand?: string;
+  power_output?: string;
+  capacity?: string;
+  voltage?: string;
+  frequency_response?: string;
+  impedance?: string;
+  warranty?: string;
+  dimensions?: string;
+  weight?: string;
+  [key: string]: string | undefined;
+}
+
+export interface Product {
+  id: string;
+  category_id?: string;
+  category?: Category;
+  name: string;
+  slug: string;
+  sku?: string;
+  price: number;
+  currency: string;
+  description: string;
+  details?: ProductDetails;
+  is_featured: boolean;
+  is_visible: boolean;
+  stock_status: StockStatus;
+  images: ProductImage[];
+  created_at: string;
+  updated_at?: string;
+}
+
+export interface Service {
+  id: string;
+  title: string;
+  slug: string;
+  subtitle?: string;
+  description: string;
+  specifications: string[];
+  price_range?: string;
+  is_active: boolean;
+  display_order: number;
+  created_at?: string;
+}
+
+export interface FilterState {
+  categorySlug: string;
+  searchQuery: string;
+  stockStatus: string;
+  maxPrice: number;
+  sortBy: 'featured' | 'price-asc' | 'price-desc' | 'newest';
+}
