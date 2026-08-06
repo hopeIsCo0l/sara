@@ -7,23 +7,14 @@ import {
   Lock,
   Plus,
   Trash2,
-  Edit,
   Eye,
-  CheckCircle,
-  XCircle,
   Upload,
   RefreshCw,
   Search,
-  Sun,
-  Volume2,
-  Package,
-  Layers,
-  Wrench,
   LogOut,
-  ShieldCheck,
-  Tag,
-  DollarSign,
   AlertTriangle,
+  X,
+  ImageIcon,
 } from 'lucide-react';
 import {
   getCategories,
@@ -33,12 +24,10 @@ import {
   updateProduct,
   deleteProduct,
   uploadImageToSupabase,
-  createCategory,
-  createService,
   supabase,
 } from '@/lib/supabase';
 import { Category, Product, Service, StockStatus } from '@/lib/types';
-import { COMPANY_NAME, PRIMARY_PHONE } from '@/lib/constants';
+import { COMPANY_NAME } from '@/lib/constants';
 
 export default function AdminPage() {
   // Authentication State
@@ -46,7 +35,7 @@ export default function AdminPage() {
   const [passcode, setPasscode] = useState('');
   const [authError, setAuthError] = useState(false);
 
-  // Active Tab: 'products' | 'categories' | 'services'
+  // Active Tab
   const [activeTab, setActiveTab] = useState<'products' | 'categories' | 'services'>('products');
 
   // Data States
@@ -60,11 +49,9 @@ export default function AdminPage() {
 
   // Modals
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
-  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
   const [submitting, setSubmitting] = useState(false);
 
-  // New Product Form State
+  // Form State for Multi-Image Product
   const [prodName, setProdName] = useState('');
   const [prodCategorySlug, setProdCategorySlug] = useState('');
   const [prodPrice, setProdPrice] = useState<number>(10000);
@@ -72,14 +59,17 @@ export default function AdminPage() {
   const [prodStockStatus, setProdStockStatus] = useState<StockStatus>('in_stock');
   const [prodDescription, setProdDescription] = useState('');
   const [prodIsFeatured, setProdIsFeatured] = useState(true);
-  const [prodImageUrl, setProdImageUrl] = useState('');
+  
+  // MULTIPLE IMAGES ARRAY
+  const [prodImageUrls, setProdImageUrls] = useState<string[]>([]);
+  const [manualUrlInput, setManualUrlInput] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // Tech Specs Key-Values
+  // Tech Specs
   const [specBrand, setSpecBrand] = useState('Sebrin Certified');
   const [specPower, setSpecPower] = useState('');
   const [specVoltage, setSpecVoltage] = useState('');
-  const [specWarranty, setSpecWarranty] = useState('2-Year Manufacturer Warranty');
+  const [specWarranty, setSpecWarranty] = useState('2-Year Warranty');
 
   // Check Session Auth on Mount
   useEffect(() => {
@@ -115,7 +105,6 @@ export default function AdminPage() {
   // Auth Handler
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    // Default PIN: sebrin2026 (or admin)
     if (passcode === 'sebrin2026' || passcode === 'admin') {
       setIsAuthenticated(true);
       sessionStorage.setItem('sebrin_admin_auth', 'true');
@@ -130,19 +119,37 @@ export default function AdminPage() {
     sessionStorage.removeItem('sebrin_admin_auth');
   };
 
-  // Image Upload Handler
-  const handleFileUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+  // MULTIPLE IMAGE FILES UPLOAD HANDLER
+  const handleMultipleFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (!files || files.length === 0) return;
 
     setUploadingImage(true);
-    const publicUrl = await uploadImageToSupabase(file);
-    if (publicUrl) {
-      setProdImageUrl(publicUrl);
-    } else {
-      alert('Failed to upload image to Supabase Storage. You can paste an Image URL manually.');
+    const newUploadedUrls: string[] = [];
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      const url = await uploadImageToSupabase(file);
+      if (url) {
+        newUploadedUrls.push(url);
+      }
     }
+
+    setProdImageUrls((prev) => [...prev, ...newUploadedUrls]);
     setUploadingImage(false);
+    e.target.value = ''; // Reset input
+  };
+
+  // Add Manual Image URL
+  const handleAddManualUrl = () => {
+    if (!manualUrlInput.trim()) return;
+    setProdImageUrls((prev) => [...prev, manualUrlInput.trim()]);
+    setManualUrlInput('');
+  };
+
+  // Remove Image from List
+  const handleRemoveImage = (index: number) => {
+    setProdImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
   // Create Product Handler
@@ -157,7 +164,9 @@ export default function AdminPage() {
     const slug = prodName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
     const selectedCat = categories.find((c) => c.slug === prodCategorySlug) || categories[0];
 
-    const finalImage = prodImageUrl || 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop';
+    const finalImages = prodImageUrls.length > 0
+      ? prodImageUrls
+      : ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop'];
 
     const detailsObj: Record<string, string> = {};
     if (specBrand) detailsObj.brand = specBrand;
@@ -179,23 +188,24 @@ export default function AdminPage() {
         is_visible: true,
         stock_status: prodStockStatus,
       },
-      [finalImage]
+      finalImages
     );
 
     setSubmitting(false);
 
     if (newProd || !supabase) {
-      alert('Product created successfully!');
+      alert('Product with multiple photos created successfully!');
       setIsProductModalOpen(false);
       // Reset Form
       setProdName('');
       setProdPrice(10000);
       setProdSku('');
       setProdDescription('');
-      setProdImageUrl('');
+      setProdImageUrls([]);
+      setManualUrlInput('');
       await loadAllData();
     } else {
-      alert('Failed to save product in Supabase.');
+      alert('Failed to save product in database.');
     }
   };
 
@@ -206,7 +216,7 @@ export default function AdminPage() {
       if (success) {
         setProducts(products.filter((p) => p.id !== id));
       } else {
-        alert('Failed to delete product from database.');
+        alert('Failed to delete product.');
       }
     }
   };
@@ -235,9 +245,7 @@ export default function AdminPage() {
     p.category?.name?.toLowerCase().includes(searchQuery.toLowerCase())
   );
 
-  // ----------------------------------------------------------------------
-  // UNAUTHENTICATED LOGIN SCREEN
-  // ----------------------------------------------------------------------
+  // LOGIN SCREEN
   if (!isAuthenticated) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4 py-16">
@@ -283,18 +291,11 @@ export default function AdminPage() {
               UNLOCK ADMIN DASHBOARD →
             </button>
           </form>
-
-          <div className="pt-4 border-t border-kith-border text-center text-[10px] font-mono text-kith-darkMuted">
-            AUTHENTICATED ACCESS ONLY • SUPABASE REST API
-          </div>
         </div>
       </div>
     );
   }
 
-  // ----------------------------------------------------------------------
-  // AUTHENTICATED ADMIN DASHBOARD
-  // ----------------------------------------------------------------------
   return (
     <div className="max-w-[1700px] mx-auto px-4 sm:px-8 py-10 space-y-8">
       {/* Top Admin Header */}
@@ -337,25 +338,22 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Analytics Summary Bar */}
+      {/* Analytics Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
           <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">TOTAL PRODUCTS</span>
           <span className="text-2xl font-mono font-extrabold text-kith-bone">{products.length}</span>
         </div>
-
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
           <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">CATEGORIES</span>
           <span className="text-2xl font-mono font-extrabold text-sky-400">{categories.length}</span>
         </div>
-
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
           <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">IN STOCK ITEMS</span>
           <span className="text-2xl font-mono font-extrabold text-emerald-500">
             {products.filter((p) => p.stock_status === 'in_stock').length}
           </span>
         </div>
-
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
           <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">SERVICES</span>
           <span className="text-2xl font-mono font-extrabold text-amber-500">{services.length}</span>
@@ -397,7 +395,6 @@ export default function AdminPage() {
           </button>
         </div>
 
-        {/* Search Bar for Products */}
         {activeTab === 'products' && (
           <div className="relative w-full sm:w-72">
             <input
@@ -412,15 +409,13 @@ export default function AdminPage() {
         )}
       </div>
 
-      {/* ------------------------------------------------------------------ */}
       {/* PRODUCTS TAB TABLE */}
-      {/* ------------------------------------------------------------------ */}
       {activeTab === 'products' && (
         <div className="bg-kith-card border border-kith-border overflow-x-auto">
           <table className="w-full text-left text-xs font-mono divide-y divide-kith-border">
             <thead className="bg-kith-subBg text-kith-muted uppercase tracking-widest text-[10px]">
               <tr>
-                <th className="py-3.5 px-4">ITEM</th>
+                <th className="py-3.5 px-4">ITEM & PHOTOS</th>
                 <th className="py-3.5 px-4">CATEGORY</th>
                 <th className="py-3.5 px-4">PRICE (ETB)</th>
                 <th className="py-3.5 px-4">STOCK STATUS</th>
@@ -439,9 +434,9 @@ export default function AdminPage() {
               ) : (
                 filteredProducts.map((p) => {
                   const primaryImg = p.images?.[0]?.url || 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop';
+                  const imgCount = p.images?.length || 1;
                   return (
                     <tr key={p.id} className="hover:bg-kith-subBg/50 transition-colors">
-                      {/* Product Name & Image */}
                       <td className="py-3 px-4 flex items-center gap-3">
                         <div className="relative w-12 h-14 bg-kith-subBg border border-kith-border overflow-hidden flex-shrink-0">
                           <Image src={primaryImg} alt={p.name} fill className="object-cover" />
@@ -450,21 +445,23 @@ export default function AdminPage() {
                           <Link href={`/catalog/${p.slug}`} className="font-bold text-kith-bone hover:text-kith-accent line-clamp-1">
                             {p.name}
                           </Link>
-                          {p.sku && <span className="text-[10px] text-kith-darkMuted block">SKU: {p.sku}</span>}
+                          <div className="flex items-center gap-2">
+                            {p.sku && <span className="text-[10px] text-kith-darkMuted block">SKU: {p.sku}</span>}
+                            <span className="text-[9px] px-1.5 py-0.5 bg-kith-subBg border border-kith-border text-kith-muted font-mono">
+                              📸 {imgCount} {imgCount === 1 ? 'photo' : 'photos'}
+                            </span>
+                          </div>
                         </div>
                       </td>
 
-                      {/* Category */}
                       <td className="py-3 px-4 text-kith-muted uppercase">
                         {p.category?.name || 'UNASSIGNED'}
                       </td>
 
-                      {/* Price in ETB */}
                       <td className="py-3 px-4 font-bold text-kith-bone whitespace-nowrap">
                         {p.price.toLocaleString()} ETB
                       </td>
 
-                      {/* Stock Status Toggle */}
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleToggleStock(p.id, p.stock_status)}
@@ -473,13 +470,11 @@ export default function AdminPage() {
                               ? 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30'
                               : 'bg-rose-500/10 text-rose-600 dark:text-rose-300 border-rose-500/30'
                           }`}
-                          title="Click to toggle stock status"
                         >
                           {p.stock_status.replace('_', ' ')}
                         </button>
                       </td>
 
-                      {/* Featured Toggle */}
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleToggleFeatured(p.id, p.is_featured)}
@@ -489,7 +484,6 @@ export default function AdminPage() {
                         </button>
                       </td>
 
-                      {/* Actions */}
                       <td className="py-3 px-4 text-right space-x-2">
                         <Link
                           href={`/catalog/${p.slug}`}
@@ -515,9 +509,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* CATEGORIES TAB TABLE */}
-      {/* ------------------------------------------------------------------ */}
+      {/* CATEGORIES TAB */}
       {activeTab === 'categories' && (
         <div className="bg-kith-card border border-kith-border overflow-x-auto">
           <table className="w-full text-left text-xs font-mono divide-y divide-kith-border">
@@ -543,9 +535,7 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* SERVICES TAB TABLE */}
-      {/* ------------------------------------------------------------------ */}
+      {/* SERVICES TAB */}
       {activeTab === 'services' && (
         <div className="space-y-4">
           {services.map((srv, idx) => (
@@ -567,7 +557,7 @@ export default function AdminPage() {
       )}
 
       {/* ------------------------------------------------------------------ */}
-      {/* CREATE PRODUCT MODAL */}
+      {/* CREATE PRODUCT MODAL (WITH MULTI-IMAGE SUPPORT) */}
       {/* ------------------------------------------------------------------ */}
       {isProductModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
@@ -580,7 +570,7 @@ export default function AdminPage() {
                 onClick={() => setIsProductModalOpen(false)}
                 className="p-1 text-kith-muted hover:text-kith-bone"
               >
-                ✕
+                <X className="w-5 h-5" />
               </button>
             </div>
 
@@ -598,7 +588,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Category & Price Grid */}
+              {/* Category & Price */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-[10px] uppercase text-kith-muted">CATEGORY *</label>
@@ -627,7 +617,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* SKU & Stock Status */}
+              {/* SKU & Stock */}
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-1">
                   <label className="text-[10px] uppercase text-kith-muted">SKU CODE</label>
@@ -655,7 +645,7 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Technical Specs */}
+              {/* Technical Specifications */}
               <div className="space-y-2 border-t border-kith-border pt-4">
                 <label className="text-[10px] uppercase text-kith-bone font-bold block">TECHNICAL SPECIFICATIONS</label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
@@ -690,33 +680,70 @@ export default function AdminPage() {
                 </div>
               </div>
 
-              {/* Image Upload / URL */}
-              <div className="space-y-2 border-t border-kith-border pt-4">
-                <label className="text-[10px] uppercase text-kith-bone font-bold block">PRODUCT IMAGE</label>
-
-                {/* Upload to Supabase Storage */}
-                <div className="flex items-center gap-3">
-                  <label className="px-4 py-2 bg-kith-subBg border border-kith-border hover:border-kith-bone cursor-pointer text-kith-bone flex items-center gap-2">
-                    <Upload className="w-4 h-4 text-sky-400" />
-                    <span>{uploadingImage ? 'Uploading...' : 'Upload File to Supabase Storage'}</span>
-                    <input type="file" accept="image/*" onChange={handleFileUpload} className="hidden" />
+              {/* MULTIPLE IMAGES SECTION */}
+              <div className="space-y-3 border-t border-kith-border pt-4">
+                <div className="flex items-center justify-between">
+                  <label className="text-[10px] uppercase text-kith-bone font-bold flex items-center gap-1.5">
+                    <ImageIcon className="w-4 h-4 text-amber-500" />
+                    PRODUCT PHOTOS (MULTIPLE ALLOWED)
                   </label>
-                  <span className="text-[10px] text-kith-darkMuted">OR</span>
+                  <span className="text-[10px] text-kith-muted">{prodImageUrls.length} photo(s) selected</span>
                 </div>
 
-                {/* Direct Image URL */}
-                <input
-                  type="text"
-                  value={prodImageUrl}
-                  onChange={(e) => setProdImageUrl(e.target.value)}
-                  placeholder="Or paste image URL (e.g. Unsplash URL)"
-                  className="w-full bg-kith-subBg border border-kith-border px-3 py-2 text-kith-bone"
-                />
+                {/* Upload Multiple Files */}
+                <div className="flex items-center gap-3">
+                  <label className="px-4 py-2 bg-kith-subBg border border-kith-border hover:border-kith-bone cursor-pointer text-kith-bone flex items-center gap-2 transition-colors">
+                    <Upload className="w-4 h-4 text-sky-400" />
+                    <span>{uploadingImage ? 'Uploading Photos...' : 'Upload Photos (Select Multiple)'}</span>
+                    <input
+                      type="file"
+                      multiple
+                      accept="image/*"
+                      onChange={handleMultipleFilesUpload}
+                      className="hidden"
+                    />
+                  </label>
+                </div>
 
-                {/* Preview */}
-                {prodImageUrl && (
-                  <div className="relative w-24 h-28 border border-kith-border overflow-hidden mt-2">
-                    <Image src={prodImageUrl} alt="Preview" fill className="object-cover" />
+                {/* Manual URL Input */}
+                <div className="flex items-center gap-2">
+                  <input
+                    type="text"
+                    value={manualUrlInput}
+                    onChange={(e) => setManualUrlInput(e.target.value)}
+                    placeholder="Or paste an Image URL..."
+                    className="flex-1 bg-kith-subBg border border-kith-border px-3 py-2 text-kith-bone"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleAddManualUrl}
+                    className="px-4 py-2 border border-kith-border bg-kith-card text-kith-bone hover:border-kith-bone uppercase text-[10px] tracking-wider"
+                  >
+                    + ADD URL
+                  </button>
+                </div>
+
+                {/* GALLERY THUMBNAILS PREVIEW */}
+                {prodImageUrls.length > 0 && (
+                  <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-2">
+                    {prodImageUrls.map((url, idx) => (
+                      <div key={idx} className="relative group w-full aspect-square border border-kith-border bg-kith-subBg overflow-hidden">
+                        <Image src={url} alt={`Photo ${idx + 1}`} fill className="object-cover" />
+                        <button
+                          type="button"
+                          onClick={() => handleRemoveImage(idx)}
+                          className="absolute top-1 right-1 p-1 bg-black/80 text-rose-400 hover:text-rose-200 transition-colors opacity-90 group-hover:opacity-100"
+                          title="Remove Photo"
+                        >
+                          <X className="w-3 h-3" />
+                        </button>
+                        {idx === 0 && (
+                          <span className="absolute bottom-0 left-0 right-0 bg-amber-500 text-black text-[8px] font-bold text-center uppercase py-0.5">
+                            MAIN
+                          </span>
+                        )}
+                      </div>
+                    ))}
                   </div>
                 )}
               </div>
@@ -733,7 +760,7 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Submit Buttons */}
+              {/* Submit */}
               <div className="pt-4 flex items-center justify-end gap-3 border-t border-kith-border">
                 <button
                   type="button"
@@ -744,10 +771,10 @@ export default function AdminPage() {
                 </button>
                 <button
                   type="submit"
-                  disabled={submitting}
+                  disabled={submitting || uploadingImage}
                   className="px-6 py-2.5 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover uppercase tracking-widest font-bold flex items-center gap-2 shadow-lg"
                 >
-                  {submitting ? 'SAVING...' : 'SAVE PRODUCT'}
+                  {submitting ? 'SAVING ITEM...' : 'SAVE PRODUCT & GALLERY'}
                 </button>
               </div>
             </form>
