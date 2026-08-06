@@ -19,6 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
     { label: 'EQUIPMENT CATALOG', href: '/catalog' },
     { label: 'FEATURED PRODUCTS', href: '/#featured' },
     { label: 'SOLAR & SOUND SERVICES', href: '/services' },
+    { label: 'ADMIN DESK', href: '/admin' },
   ];
 
   return (
