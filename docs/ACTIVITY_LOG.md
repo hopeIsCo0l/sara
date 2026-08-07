@@ -90,3 +90,4 @@
 - Entry #87: [2026-08-07 22:41:13] add type validation for solar attributes schema (pass #87)
 - Entry #88: [2026-08-07 22:41:14] improve database indexing for product category filtering (pass #88)
 - Entry #89: [2026-08-07 22:41:14] optimize Next.js bundle chunk splitting (pass #89)
+- Entry #90: [2026-08-07 22:41:14] refactor admin modal state management hooks (pass #90)
