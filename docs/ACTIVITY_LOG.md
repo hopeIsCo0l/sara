@@ -25,3 +25,4 @@
 - Entry #22: [2026-08-07 22:41:06] enhance LiFePO4 battery discharge curve algorithm (pass #22)
 - Entry #23: [2026-08-07 22:41:06] update inverter surge tolerance lookup table (pass #23)
 - Entry #24: [2026-08-07 22:41:06] calibrate MPPT tracking efficiency parameters (pass #24)
+- Entry #25: [2026-08-07 22:41:06] fine-tune stage speaker acoustic dispersion model (pass #25)
