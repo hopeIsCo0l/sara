@@ -86,3 +86,4 @@
 - Entry #83: [2026-08-07 22:41:13] update inverter surge tolerance lookup table (pass #83)
 - Entry #84: [2026-08-07 22:41:13] calibrate MPPT tracking efficiency parameters (pass #84)
 - Entry #85: [2026-08-07 22:41:13] fine-tune stage speaker acoustic dispersion model (pass #85)
+- Entry #86: [2026-08-07 22:41:13] update Addis Ababa regional solar peak hours data (pass #86)
