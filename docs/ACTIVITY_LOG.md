@@ -75,3 +75,4 @@
 - Entry #72: [2026-08-07 22:41:12] enhance responsive breakpoints for 4-column product grid (pass #72)
 - Entry #73: [2026-08-07 22:41:12] validate Supabase storage public URL fallback (pass #73)
 - Entry #74: [2026-08-07 22:41:12] update Ethiopian Birr formatting utility (pass #74)
+- Entry #75: [2026-08-07 22:41:12] add unit test for peak kW continuous load calculation (pass #75)
