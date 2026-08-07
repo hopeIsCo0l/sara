@@ -222,32 +222,50 @@ export async function createProduct(
 }
 
 /**
- * Update an existing product
+ * Update an existing product and optional image set
  */
 export async function updateProduct(
   id: string,
-  updates: Partial<Product>
+  updates: Partial<Product>,
+  imageUrls?: string[]
 ): Promise<boolean> {
   if (!supabase) return true;
 
   try {
+    const updatePayload: Record<string, any> = {
+      ...(updates.name !== undefined && { name: updates.name }),
+      ...(updates.category_id !== undefined && { category_id: updates.category_id }),
+      ...(updates.price !== undefined && { price: updates.price }),
+      ...(updates.stock_status !== undefined && { stock_status: updates.stock_status }),
+      ...(updates.is_featured !== undefined && { is_featured: updates.is_featured }),
+      ...(updates.is_visible !== undefined && { is_visible: updates.is_visible }),
+      ...(updates.description !== undefined && { description: updates.description }),
+      ...(updates.sku !== undefined && { sku: updates.sku }),
+      ...(updates.details !== undefined && { details: updates.details }),
+    };
+
     const { error } = await supabase
       .from('products')
-      .update({
-        name: updates.name,
-        price: updates.price,
-        stock_status: updates.stock_status,
-        is_featured: updates.is_featured,
-        is_visible: updates.is_visible,
-        description: updates.description,
-        sku: updates.sku,
-      })
+      .update(updatePayload)
       .eq('id', id);
 
     if (error) {
       console.error('Error updating product:', error);
       return false;
     }
+
+    // If new images provided, refresh product images
+    if (imageUrls && imageUrls.length > 0) {
+      await supabase.from('product_images').delete().eq('product_id', id);
+      const imageRecords = imageUrls.map((url, index) => ({
+        product_id: id,
+        url,
+        is_primary: index === 0,
+        display_order: index,
+      }));
+      await supabase.from('product_images').insert(imageRecords);
+    }
+
     return true;
   } catch (err) {
     console.error('Failed to update product:', err);
@@ -279,13 +297,55 @@ export async function deleteProduct(id: string): Promise<boolean> {
 /**
  * Create a new Category
  */
-export async function createCategory(cat: Omit<Category, 'id' | 'created_at'>): Promise<boolean> {
+export async function createCategory(cat: Omit<Category, 'id' | 'created_at'>): Promise<Category | null> {
+  if (!supabase) {
+    return {
+      id: `cat-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      ...cat,
+    };
+  }
+
+  try {
+    const { data, error } = await supabase.from('categories').insert(cat).select().single();
+    if (error || !data) {
+      console.error('Error creating category:', error);
+      return null;
+    }
+    return data as Category;
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Update an existing Category
+ */
+export async function updateCategory(id: string, updates: Partial<Category>): Promise<boolean> {
   if (!supabase) return true;
 
   try {
-    const { error } = await supabase.from('categories').insert(cat);
+    const { error } = await supabase.from('categories').update(updates).eq('id', id);
     if (error) {
-      console.error('Error creating category:', error);
+      console.error('Error updating category:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+
+/**
+ * Delete a Category by ID
+ */
+export async function deleteCategory(id: string): Promise<boolean> {
+  if (!supabase) return true;
+
+  try {
+    const { error } = await supabase.from('categories').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting category:', error);
       return false;
     }
     return true;
@@ -297,13 +357,37 @@ export async function createCategory(cat: Omit<Category, 'id' | 'created_at'>): 
 /**
  * Create a new Service
  */
-export async function createService(service: Omit<Service, 'id' | 'created_at'>): Promise<boolean> {
+export async function createService(service: Omit<Service, 'id' | 'created_at'>): Promise<Service | null> {
+  if (!supabase) {
+    return {
+      id: `srv-${Date.now()}`,
+      created_at: new Date().toISOString(),
+      ...service,
+    };
+  }
+
+  try {
+    const { data, error } = await supabase.from('services').insert(service).select().single();
+    if (error || !data) {
+      console.error('Error creating service:', error);
+      return null;
+    }
+    return data as Service;
+  } catch (err) {
+    return null;
+  }
+}
+
+/**
+ * Update an existing Service
+ */
+export async function updateService(id: string, updates: Partial<Service>): Promise<boolean> {
   if (!supabase) return true;
 
   try {
-    const { error } = await supabase.from('services').insert(service);
+    const { error } = await supabase.from('services').update(updates).eq('id', id);
     if (error) {
-      console.error('Error creating service:', error);
+      console.error('Error updating service:', error);
       return false;
     }
     return true;
@@ -311,3 +395,22 @@ export async function createService(service: Omit<Service, 'id' | 'created_at'>)
     return false;
   }
 }
+
+/**
+ * Delete a Service by ID
+ */
+export async function deleteService(id: string): Promise<boolean> {
+  if (!supabase) return true;
+
+  try {
+    const { error } = await supabase.from('services').delete().eq('id', id);
+    if (error) {
+      console.error('Error deleting service:', error);
+      return false;
+    }
+    return true;
+  } catch (err) {
+    return false;
+  }
+}
+

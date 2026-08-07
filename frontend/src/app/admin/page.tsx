@@ -7,6 +7,7 @@ import {
   Lock,
   Plus,
   Trash2,
+  Edit,
   Eye,
   Upload,
   RefreshCw,
@@ -15,6 +16,11 @@ import {
   AlertTriangle,
   X,
   ImageIcon,
+  CheckCircle2,
+  Layers,
+  Sparkles,
+  Zap,
+  Wrench,
 } from 'lucide-react';
 import {
   getCategories,
@@ -23,6 +29,12 @@ import {
   createProduct,
   updateProduct,
   deleteProduct,
+  createCategory,
+  updateCategory,
+  deleteCategory,
+  createService,
+  updateService,
+  deleteService,
   uploadImageToSupabase,
   supabase,
 } from '@/lib/supabase';
@@ -46,12 +58,24 @@ export default function AdminPage() {
 
   // Search & Filter
   const [searchQuery, setSearchQuery] = useState('');
+  const [selectedCategoryFilter, setSelectedCategoryFilter] = useState('all');
 
-  // Modals
+  // Modals State
   const [isProductModalOpen, setIsProductModalOpen] = useState(false);
-  const [submitting, setSubmitting] = useState(false);
+  const [editingProductId, setEditingProductId] = useState<string | null>(null);
 
-  // Form State for Multi-Image Product
+  const [isCategoryModalOpen, setIsCategoryModalOpen] = useState(false);
+  const [editingCategoryId, setEditingCategoryId] = useState<string | null>(null);
+
+  const [isServiceModalOpen, setIsServiceModalOpen] = useState(false);
+  const [editingServiceId, setEditingServiceId] = useState<string | null>(null);
+
+  const [submitting, setSubmitting] = useState(false);
+  const [successToast, setSuccessToast] = useState<string | null>(null);
+
+  // -------------------------------------------------------------
+  // FORM STATE: PRODUCT
+  // -------------------------------------------------------------
   const [prodName, setProdName] = useState('');
   const [prodCategorySlug, setProdCategorySlug] = useState('');
   const [prodPrice, setProdPrice] = useState<number>(10000);
@@ -59,17 +83,33 @@ export default function AdminPage() {
   const [prodStockStatus, setProdStockStatus] = useState<StockStatus>('in_stock');
   const [prodDescription, setProdDescription] = useState('');
   const [prodIsFeatured, setProdIsFeatured] = useState(true);
-  
-  // MULTIPLE IMAGES ARRAY
   const [prodImageUrls, setProdImageUrls] = useState<string[]>([]);
   const [manualUrlInput, setManualUrlInput] = useState('');
   const [uploadingImage, setUploadingImage] = useState(false);
 
-  // Tech Specs
+  // Tech Specs Fields
   const [specBrand, setSpecBrand] = useState('Sebrin Certified');
   const [specPower, setSpecPower] = useState('');
   const [specVoltage, setSpecVoltage] = useState('');
   const [specWarranty, setSpecWarranty] = useState('2-Year Warranty');
+
+  // -------------------------------------------------------------
+  // FORM STATE: CATEGORY
+  // -------------------------------------------------------------
+  const [catName, setCatName] = useState('');
+  const [catSlug, setCatSlug] = useState('');
+  const [catDescription, setCatDescription] = useState('');
+  const [catDisplayOrder, setCatDisplayOrder] = useState<number>(1);
+
+  // -------------------------------------------------------------
+  // FORM STATE: SERVICE
+  // -------------------------------------------------------------
+  const [srvTitle, setSrvTitle] = useState('');
+  const [srvSlug, setSrvSlug] = useState('');
+  const [srvSubtitle, setSrvSubtitle] = useState('');
+  const [srvDescription, setSrvDescription] = useState('');
+  const [srvSpecsText, setSrvSpecsText] = useState('');
+  const [srvPriceRange, setSrvPriceRange] = useState('Custom Quote');
 
   // Check Session Auth on Mount
   useEffect(() => {
@@ -78,6 +118,12 @@ export default function AdminPage() {
       setIsAuthenticated(true);
     }
   }, []);
+
+  // Toast Helper
+  const showToast = (msg: string) => {
+    setSuccessToast(msg);
+    setTimeout(() => setSuccessToast(null), 3500);
+  };
 
   // Load Data
   const loadAllData = async () => {
@@ -119,7 +165,192 @@ export default function AdminPage() {
     sessionStorage.removeItem('sebrin_admin_auth');
   };
 
-  // MULTIPLE IMAGE FILES UPLOAD HANDLER
+  // -------------------------------------------------------------
+  // PRODUCT CRUD HANDLERS
+  // -------------------------------------------------------------
+  const openNewProductModal = () => {
+    setEditingProductId(null);
+    setProdName('');
+    setProdCategorySlug(categories[0]?.slug || '');
+    setProdPrice(10000);
+    setProdSku(`SEB-${Math.floor(1000 + Math.random() * 9000)}`);
+    setProdStockStatus('in_stock');
+    setProdDescription('');
+    setProdIsFeatured(true);
+    setProdImageUrls([]);
+    setManualUrlInput('');
+    setSpecBrand('Sebrin Certified');
+    setSpecPower('');
+    setSpecVoltage('');
+    setSpecWarranty('2-Year Warranty');
+    setIsProductModalOpen(true);
+  };
+
+  const openEditProductModal = (product: Product) => {
+    setEditingProductId(product.id);
+    setProdName(product.name);
+    setProdCategorySlug(product.category?.slug || categories[0]?.slug || '');
+    setProdPrice(product.price);
+    setProdSku(product.sku || '');
+    setProdStockStatus(product.stock_status);
+    setProdDescription(product.description || '');
+    setProdIsFeatured(product.is_featured);
+    const existingImages = product.images?.map((img) => img.url) || [];
+    setProdImageUrls(existingImages);
+    setManualUrlInput('');
+    setSpecBrand(product.details?.brand || 'Sebrin Certified');
+    setSpecPower(product.details?.power_output || '');
+    setSpecVoltage(product.details?.voltage || '');
+    setSpecWarranty(product.details?.warranty || '2-Year Warranty');
+    setIsProductModalOpen(true);
+  };
+
+  const handleSaveProduct = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!prodName.trim()) {
+      alert('Please enter a product name');
+      return;
+    }
+
+    setSubmitting(true);
+    const slug = prodName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const selectedCat = categories.find((c) => c.slug === prodCategorySlug) || categories[0];
+
+    const finalImages =
+      prodImageUrls.length > 0
+        ? prodImageUrls
+        : ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop'];
+
+    const detailsObj: Record<string, string> = {};
+    if (specBrand) detailsObj.brand = specBrand;
+    if (specPower) detailsObj.power_output = specPower;
+    if (specVoltage) detailsObj.voltage = specVoltage;
+    if (specWarranty) detailsObj.warranty = specWarranty;
+
+    if (editingProductId) {
+      // UPDATE EXISTING PRODUCT
+      const success = await updateProduct(
+        editingProductId,
+        {
+          name: prodName,
+          category_id: selectedCat?.id,
+          price: Number(prodPrice),
+          stock_status: prodStockStatus,
+          is_featured: prodIsFeatured,
+          description: prodDescription,
+          sku: prodSku,
+          details: detailsObj,
+        },
+        finalImages
+      );
+
+      // Local state update for instant UI feedback
+      setProducts((prev) =>
+        prev.map((p) =>
+          p.id === editingProductId
+            ? {
+                ...p,
+                name: prodName,
+                category: selectedCat,
+                category_id: selectedCat?.id,
+                price: Number(prodPrice),
+                stock_status: prodStockStatus,
+                is_featured: prodIsFeatured,
+                description: prodDescription,
+                sku: prodSku,
+                details: detailsObj,
+                images: finalImages.map((url, i) => ({
+                  id: `img-${i}`,
+                  product_id: editingProductId,
+                  url,
+                  is_primary: i === 0,
+                  display_order: i,
+                })),
+              }
+            : p
+        )
+      );
+
+      setSubmitting(false);
+      setIsProductModalOpen(false);
+      showToast(`Product "${prodName}" updated successfully!`);
+    } else {
+      // CREATE NEW PRODUCT
+      const newProd = await createProduct(
+        {
+          category_id: selectedCat?.id,
+          name: prodName,
+          slug,
+          sku: prodSku || `SEB-${Math.floor(1000 + Math.random() * 9000)}`,
+          price: Number(prodPrice),
+          currency: 'ETB',
+          description: prodDescription || `${prodName} supplied by Sebrin Trading PLC.`,
+          details: detailsObj,
+          is_featured: prodIsFeatured,
+          is_visible: true,
+          stock_status: prodStockStatus,
+        },
+        finalImages
+      );
+
+      // Fallback local addition if running without backend tables
+      const newProductItem: Product = newProd || {
+        id: `prod-${Date.now()}`,
+        name: prodName,
+        slug,
+        sku: prodSku || `SEB-${Math.floor(1000 + Math.random() * 9000)}`,
+        price: Number(prodPrice),
+        currency: 'ETB',
+        category_id: selectedCat?.id,
+        category: selectedCat,
+        description: prodDescription || `${prodName} supplied by Sebrin Trading PLC.`,
+        details: detailsObj,
+        is_featured: prodIsFeatured,
+        is_visible: true,
+        stock_status: prodStockStatus,
+        created_at: new Date().toISOString(),
+        images: finalImages.map((url, i) => ({
+          id: `img-${Date.now()}-${i}`,
+          product_id: `prod-${Date.now()}`,
+          url,
+          is_primary: i === 0,
+          display_order: i,
+        })),
+      };
+
+      setProducts((prev) => [newProductItem, ...prev]);
+      setSubmitting(false);
+      setIsProductModalOpen(false);
+      showToast(`Product "${prodName}" created successfully!`);
+    }
+  };
+
+  const handleDeleteProduct = async (id: string, name: string) => {
+    if (confirm(`Are you sure you want to delete "${name}" from the catalog?`)) {
+      await deleteProduct(id);
+      setProducts((prev) => prev.filter((p) => p.id !== id));
+      showToast(`Product "${name}" deleted.`);
+    }
+  };
+
+  const handleToggleStock = async (id: string, currentStatus: StockStatus) => {
+    const nextStatus: StockStatus = currentStatus === 'in_stock' ? 'sold_out' : 'in_stock';
+    await updateProduct(id, { stock_status: nextStatus });
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, stock_status: nextStatus } : p))
+    );
+    showToast(`Stock status updated to ${nextStatus.replace('_', ' ')}.`);
+  };
+
+  const handleToggleFeatured = async (id: string, currentFeatured: boolean) => {
+    await updateProduct(id, { is_featured: !currentFeatured });
+    setProducts((prev) =>
+      prev.map((p) => (p.id === id ? { ...p, is_featured: !currentFeatured } : p))
+    );
+    showToast(`Featured status toggled.`);
+  };
+
+  // Upload image handler
   const handleMultipleFilesUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = e.target.files;
     if (!files || files.length === 0) return;
@@ -137,115 +368,217 @@ export default function AdminPage() {
 
     setProdImageUrls((prev) => [...prev, ...newUploadedUrls]);
     setUploadingImage(false);
-    e.target.value = ''; // Reset input
+    e.target.value = '';
   };
 
-  // Add Manual Image URL
   const handleAddManualUrl = () => {
     if (!manualUrlInput.trim()) return;
     setProdImageUrls((prev) => [...prev, manualUrlInput.trim()]);
     setManualUrlInput('');
   };
 
-  // Remove Image from List
   const handleRemoveImage = (index: number) => {
     setProdImageUrls((prev) => prev.filter((_, i) => i !== index));
   };
 
-  // Create Product Handler
-  const handleCreateProduct = async (e: React.FormEvent) => {
+  // -------------------------------------------------------------
+  // CATEGORY CRUD HANDLERS
+  // -------------------------------------------------------------
+  const openNewCategoryModal = () => {
+    setEditingCategoryId(null);
+    setCatName('');
+    setCatSlug('');
+    setCatDescription('');
+    setCatDisplayOrder(categories.length + 1);
+    setIsCategoryModalOpen(true);
+  };
+
+  const openEditCategoryModal = (cat: Category) => {
+    setEditingCategoryId(cat.id);
+    setCatName(cat.name);
+    setCatSlug(cat.slug);
+    setCatDescription(cat.description || '');
+    setCatDisplayOrder(cat.display_order);
+    setIsCategoryModalOpen(true);
+  };
+
+  const handleSaveCategory = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!prodName.trim()) {
-      alert('Please enter a product name');
-      return;
-    }
+    if (!catName.trim()) return;
 
     setSubmitting(true);
-    const slug = prodName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
-    const selectedCat = categories.find((c) => c.slug === prodCategorySlug) || categories[0];
+    const slug = catSlug.trim() || catName.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
 
-    const finalImages = prodImageUrls.length > 0
-      ? prodImageUrls
-      : ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop'];
-
-    const detailsObj: Record<string, string> = {};
-    if (specBrand) detailsObj.brand = specBrand;
-    if (specPower) detailsObj.power_output = specPower;
-    if (specVoltage) detailsObj.voltage = specVoltage;
-    if (specWarranty) detailsObj.warranty = specWarranty;
-
-    const newProd = await createProduct(
-      {
-        category_id: selectedCat?.id,
-        name: prodName,
+    if (editingCategoryId) {
+      // UPDATE CATEGORY
+      await updateCategory(editingCategoryId, {
+        name: catName,
         slug,
-        sku: prodSku || `SEB-${Math.floor(1000 + Math.random() * 9000)}`,
-        price: Number(prodPrice),
-        currency: 'ETB',
-        description: prodDescription || `${prodName} supplied by Sebrin Trading PLC.`,
-        details: detailsObj,
-        is_featured: prodIsFeatured,
-        is_visible: true,
-        stock_status: prodStockStatus,
-      },
-      finalImages
-    );
+        description: catDescription,
+        display_order: Number(catDisplayOrder),
+      });
+
+      setCategories((prev) =>
+        prev.map((c) =>
+          c.id === editingCategoryId
+            ? { ...c, name: catName, slug, description: catDescription, display_order: Number(catDisplayOrder) }
+            : c
+        )
+      );
+      showToast(`Category "${catName}" updated.`);
+    } else {
+      // CREATE CATEGORY
+      const newCat = await createCategory({
+        name: catName,
+        slug,
+        description: catDescription,
+        display_order: Number(catDisplayOrder),
+      });
+
+      const catItem: Category = newCat || {
+        id: `cat-${Date.now()}`,
+        name: catName,
+        slug,
+        description: catDescription,
+        display_order: Number(catDisplayOrder),
+        created_at: new Date().toISOString(),
+      };
+
+      setCategories((prev) => [...prev, catItem]);
+      showToast(`Category "${catName}" added.`);
+    }
 
     setSubmitting(false);
+    setIsCategoryModalOpen(false);
+  };
 
-    if (newProd || !supabase) {
-      alert('Product with multiple photos created successfully!');
-      setIsProductModalOpen(false);
-      // Reset Form
-      setProdName('');
-      setProdPrice(10000);
-      setProdSku('');
-      setProdDescription('');
-      setProdImageUrls([]);
-      setManualUrlInput('');
-      await loadAllData();
+  const handleDeleteCategory = async (id: string, name: string) => {
+    if (confirm(`Are you sure you want to delete category "${name}"?`)) {
+      await deleteCategory(id);
+      setCategories((prev) => prev.filter((c) => c.id !== id));
+      showToast(`Category "${name}" deleted.`);
+    }
+  };
+
+  // -------------------------------------------------------------
+  // SERVICE CRUD HANDLERS
+  // -------------------------------------------------------------
+  const openNewServiceModal = () => {
+    setEditingServiceId(null);
+    setSrvTitle('');
+    setSrvSlug('');
+    setSrvSubtitle('');
+    setSrvDescription('');
+    setSrvSpecsText('Site Load Assessment\nEquipment Commissioning\nPreventative Maintenance');
+    setSrvPriceRange('Custom Quote');
+    setIsServiceModalOpen(true);
+  };
+
+  const openEditServiceModal = (srv: Service) => {
+    setEditingServiceId(srv.id);
+    setSrvTitle(srv.title);
+    setSrvSlug(srv.slug);
+    setSrvSubtitle(srv.subtitle || '');
+    setSrvDescription(srv.description);
+    setSrvSpecsText(srv.specifications?.join('\n') || '');
+    setSrvPriceRange(srv.price_range || 'Custom Quote');
+    setIsServiceModalOpen(true);
+  };
+
+  const handleSaveService = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!srvTitle.trim()) return;
+
+    setSubmitting(true);
+    const slug = srvSlug.trim() || srvTitle.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)+/g, '');
+    const specsArray = srvSpecsText
+      .split('\n')
+      .map((s) => s.trim())
+      .filter(Boolean);
+
+    if (editingServiceId) {
+      // UPDATE SERVICE
+      await updateService(editingServiceId, {
+        title: srvTitle,
+        slug,
+        subtitle: srvSubtitle,
+        description: srvDescription,
+        specifications: specsArray,
+        price_range: srvPriceRange,
+      });
+
+      setServices((prev) =>
+        prev.map((s) =>
+          s.id === editingServiceId
+            ? {
+                ...s,
+                title: srvTitle,
+                slug,
+                subtitle: srvSubtitle,
+                description: srvDescription,
+                specifications: specsArray,
+                price_range: srvPriceRange,
+              }
+            : s
+        )
+      );
+      showToast(`Service "${srvTitle}" updated.`);
     } else {
-      alert('Failed to save product in database.');
+      // CREATE SERVICE
+      const newSrv = await createService({
+        title: srvTitle,
+        slug,
+        subtitle: srvSubtitle,
+        description: srvDescription,
+        specifications: specsArray,
+        price_range: srvPriceRange,
+        is_active: true,
+        display_order: services.length + 1,
+      });
+
+      const srvItem: Service = newSrv || {
+        id: `srv-${Date.now()}`,
+        title: srvTitle,
+        slug,
+        subtitle: srvSubtitle,
+        description: srvDescription,
+        specifications: specsArray,
+        price_range: srvPriceRange,
+        is_active: true,
+        display_order: services.length + 1,
+        created_at: new Date().toISOString(),
+      };
+
+      setServices((prev) => [...prev, srvItem]);
+      showToast(`Service "${srvTitle}" added.`);
     }
+
+    setSubmitting(false);
+    setIsServiceModalOpen(false);
   };
 
-  // Delete Product Handler
-  const handleDeleteProduct = async (id: string, name: string) => {
-    if (confirm(`Are you sure you want to delete "${name}"?`)) {
-      const success = await deleteProduct(id);
-      if (success) {
-        setProducts(products.filter((p) => p.id !== id));
-      } else {
-        alert('Failed to delete product.');
-      }
-    }
-  };
-
-  // Toggle Stock Status
-  const handleToggleStock = async (id: string, currentStatus: StockStatus) => {
-    const nextStatus: StockStatus = currentStatus === 'in_stock' ? 'sold_out' : 'in_stock';
-    const success = await updateProduct(id, { stock_status: nextStatus });
-    if (success) {
-      setProducts(products.map((p) => (p.id === id ? { ...p, stock_status: nextStatus } : p)));
-    }
-  };
-
-  // Toggle Featured
-  const handleToggleFeatured = async (id: string, currentFeatured: boolean) => {
-    const success = await updateProduct(id, { is_featured: !currentFeatured });
-    if (success) {
-      setProducts(products.map((p) => (p.id === id ? { ...p, is_featured: !currentFeatured } : p)));
+  const handleDeleteService = async (id: string, title: string) => {
+    if (confirm(`Are you sure you want to delete service "${title}"?`)) {
+      await deleteService(id);
+      setServices((prev) => prev.filter((s) => s.id !== id));
+      showToast(`Service "${title}" deleted.`);
     }
   };
 
   // Filtered Products List
-  const filteredProducts = products.filter((p) =>
-    p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.sku?.toLowerCase().includes(searchQuery.toLowerCase()) ||
-    p.category?.name?.toLowerCase().includes(searchQuery.toLowerCase())
-  );
+  const filteredProducts = products.filter((p) => {
+    const matchesCategory =
+      selectedCategoryFilter === 'all' || p.category?.slug === selectedCategoryFilter;
+    const matchesSearch =
+      p.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.sku?.toLowerCase().includes(searchQuery.toLowerCase()) ||
+      p.category?.name?.toLowerCase().includes(searchQuery.toLowerCase());
+    return matchesCategory && matchesSearch;
+  });
 
+  // -------------------------------------------------------------
   // LOGIN SCREEN
+  // -------------------------------------------------------------
   if (!isAuthenticated) {
     return (
       <div className="min-h-[80vh] flex items-center justify-center px-4 py-16">
@@ -258,7 +591,7 @@ export default function AdminPage() {
               {COMPANY_NAME}
             </h1>
             <p className="text-xs font-mono text-kith-muted uppercase tracking-widest">
-              ADMINISTRATIVE DESK LOGIN
+              ADMINISTRATIVE DESK & CRUD OPERATIONS
             </p>
           </div>
 
@@ -298,12 +631,20 @@ export default function AdminPage() {
 
   return (
     <div className="max-w-[1700px] mx-auto px-4 sm:px-8 py-10 space-y-8">
+      {/* Toast Notification */}
+      {successToast && (
+        <div className="fixed bottom-6 right-6 z-50 p-4 bg-emerald-600 text-white font-mono text-xs uppercase tracking-wider font-bold shadow-2xl flex items-center gap-2 animate-in fade-in slide-in-from-bottom-3">
+          <CheckCircle2 className="w-4 h-4" />
+          <span>{successToast}</span>
+        </div>
+      )}
+
       {/* Top Admin Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between border-b border-kith-border pb-6 gap-4">
         <div>
           <div className="flex items-center gap-2 text-[10px] font-mono tracking-superwide text-kith-muted uppercase mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            SEBRIN TRADING PLC // LIVE CATALOG MANAGEMENT
+            SEBRIN TRADING PLC // LIVE CATALOG MANAGEMENT & CRUD OPERATIONS
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight uppercase text-kith-bone flex items-center gap-3">
             EQUIPMENT ADMIN DASHBOARD
@@ -321,12 +662,32 @@ export default function AdminPage() {
             REFRESH
           </button>
 
-          <button
-            onClick={() => setIsProductModalOpen(true)}
-            className="px-4 py-2 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono uppercase tracking-widest font-bold flex items-center gap-1.5 transition-all shadow-md"
-          >
-            <Plus className="w-4 h-4" /> ADD PRODUCT
-          </button>
+          {activeTab === 'products' && (
+            <button
+              onClick={openNewProductModal}
+              className="px-4 py-2 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono uppercase tracking-widest font-bold flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <Plus className="w-4 h-4" /> ADD PRODUCT
+            </button>
+          )}
+
+          {activeTab === 'categories' && (
+            <button
+              onClick={openNewCategoryModal}
+              className="px-4 py-2 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono uppercase tracking-widest font-bold flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <Plus className="w-4 h-4" /> ADD CATEGORY
+            </button>
+          )}
+
+          {activeTab === 'services' && (
+            <button
+              onClick={openNewServiceModal}
+              className="px-4 py-2 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono uppercase tracking-widest font-bold flex items-center gap-1.5 transition-all shadow-md"
+            >
+              <Plus className="w-4 h-4" /> ADD SERVICE
+            </button>
+          )}
 
           <button
             onClick={handleLogout}
@@ -338,7 +699,7 @@ export default function AdminPage() {
         </div>
       </div>
 
-      {/* Analytics Bar */}
+      {/* Analytics Metric Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
           <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">TOTAL PRODUCTS</span>
@@ -355,12 +716,12 @@ export default function AdminPage() {
           </span>
         </div>
         <div className="bg-kith-card border border-kith-border p-5 space-y-1">
-          <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">SERVICES</span>
+          <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">ACTIVE SERVICES</span>
           <span className="text-2xl font-mono font-extrabold text-amber-500">{services.length}</span>
         </div>
       </div>
 
-      {/* Tab Switcher & Search */}
+      {/* Tab Switcher & Filters */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 border-b border-kith-border pb-4">
         <div className="flex items-center gap-2 border border-kith-border bg-kith-card p-1">
           <button
@@ -396,20 +757,39 @@ export default function AdminPage() {
         </div>
 
         {activeTab === 'products' && (
-          <div className="relative w-full sm:w-72">
-            <input
-              type="text"
-              value={searchQuery}
-              onChange={(e) => setSearchQuery(e.target.value)}
-              placeholder="Search inventory..."
-              className="w-full bg-kith-subBg border border-kith-border px-3 py-2 pl-9 text-xs font-mono text-kith-bone placeholder-kith-darkMuted focus:outline-none focus:border-kith-bone"
-            />
-            <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-kith-darkMuted" />
+          <div className="flex items-center gap-3">
+            {/* Category Filter */}
+            <select
+              value={selectedCategoryFilter}
+              onChange={(e) => setSelectedCategoryFilter(e.target.value)}
+              className="bg-kith-subBg border border-kith-border px-3 py-2 text-xs font-mono text-kith-bone uppercase outline-none"
+            >
+              <option value="all">ALL CATEGORIES</option>
+              {categories.map((c) => (
+                <option key={c.id} value={c.slug}>
+                  {c.name}
+                </option>
+              ))}
+            </select>
+
+            {/* Search Input */}
+            <div className="relative w-full sm:w-64">
+              <input
+                type="text"
+                value={searchQuery}
+                onChange={(e) => setSearchQuery(e.target.value)}
+                placeholder="Search inventory..."
+                className="w-full bg-kith-subBg border border-kith-border px-3 py-2 pl-9 text-xs font-mono text-kith-bone placeholder-kith-darkMuted focus:outline-none focus:border-kith-bone"
+              />
+              <Search className="absolute left-3 top-2.5 w-3.5 h-3.5 text-kith-darkMuted" />
+            </div>
           </div>
         )}
       </div>
 
-      {/* PRODUCTS TAB TABLE */}
+      {/* ------------------------------------------------------------- */}
+      {/* PRODUCTS TAB: FULL CRUD TABLE */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === 'products' && (
         <div className="bg-kith-card border border-kith-border overflow-x-auto">
           <table className="w-full text-left text-xs font-mono divide-y divide-kith-border">
@@ -420,7 +800,7 @@ export default function AdminPage() {
                 <th className="py-3.5 px-4">PRICE (ETB)</th>
                 <th className="py-3.5 px-4">STOCK STATUS</th>
                 <th className="py-3.5 px-4">FEATURED</th>
-                <th className="py-3.5 px-4 text-right">ACTIONS</th>
+                <th className="py-3.5 px-4 text-right">CRUD ACTIONS</th>
               </tr>
             </thead>
 
@@ -433,7 +813,9 @@ export default function AdminPage() {
                 </tr>
               ) : (
                 filteredProducts.map((p) => {
-                  const primaryImg = p.images?.[0]?.url || 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop';
+                  const primaryImg =
+                    p.images?.[0]?.url ||
+                    'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1000&auto=format&fit=crop';
                   const imgCount = p.images?.length || 1;
                   return (
                     <tr key={p.id} className="hover:bg-kith-subBg/50 transition-colors">
@@ -442,11 +824,18 @@ export default function AdminPage() {
                           <Image src={primaryImg} alt={p.name} fill className="object-cover" />
                         </div>
                         <div className="space-y-0.5 max-w-xs">
-                          <Link href={`/catalog/${p.slug}`} className="font-bold text-kith-bone hover:text-kith-accent line-clamp-1">
+                          <Link
+                            href={`/catalog/${p.slug}`}
+                            className="font-bold text-kith-bone hover:text-amber-500 line-clamp-1"
+                          >
                             {p.name}
                           </Link>
                           <div className="flex items-center gap-2">
-                            {p.sku && <span className="text-[10px] text-kith-darkMuted block">SKU: {p.sku}</span>}
+                            {p.sku && (
+                              <span className="text-[10px] text-kith-darkMuted block">
+                                SKU: {p.sku}
+                              </span>
+                            )}
                             <span className="text-[9px] px-1.5 py-0.5 bg-kith-subBg border border-kith-border text-kith-muted font-mono">
                               📸 {imgCount} {imgCount === 1 ? 'photo' : 'photos'}
                             </span>
@@ -478,26 +867,35 @@ export default function AdminPage() {
                       <td className="py-3 px-4">
                         <button
                           onClick={() => handleToggleFeatured(p.id, p.is_featured)}
-                          className={`text-xs ${p.is_featured ? 'text-amber-500 font-bold' : 'text-kith-darkMuted'}`}
+                          className={`text-xs ${
+                            p.is_featured ? 'text-amber-500 font-bold' : 'text-kith-darkMuted'
+                          }`}
                         >
                           {p.is_featured ? '★ YES' : '☆ NO'}
                         </button>
                       </td>
 
-                      <td className="py-3 px-4 text-right space-x-2">
+                      <td className="py-3 px-4 text-right space-x-1.5 whitespace-nowrap">
                         <Link
                           href={`/catalog/${p.slug}`}
-                          className="p-1.5 inline-block text-kith-muted hover:text-kith-bone"
+                          className="p-1.5 inline-block text-kith-muted hover:text-kith-bone border border-kith-border hover:border-kith-bone"
                           title="View Specs Page"
                         >
-                          <Eye className="w-4 h-4" />
+                          <Eye className="w-3.5 h-3.5" />
                         </Link>
                         <button
+                          onClick={() => openEditProductModal(p)}
+                          className="p-1.5 inline-block text-sky-400 hover:text-sky-300 border border-kith-border hover:border-sky-400/50"
+                          title="Edit Product Details"
+                        >
+                          <Edit className="w-3.5 h-3.5" />
+                        </button>
+                        <button
                           onClick={() => handleDeleteProduct(p.id, p.name)}
-                          className="p-1.5 text-kith-muted hover:text-rose-400 transition-colors"
+                          className="p-1.5 inline-block text-rose-500 hover:text-rose-400 border border-kith-border hover:border-rose-400/50 transition-colors"
                           title="Delete Product"
                         >
-                          <Trash2 className="w-4 h-4" />
+                          <Trash2 className="w-3.5 h-3.5" />
                         </button>
                       </td>
                     </tr>
@@ -509,7 +907,9 @@ export default function AdminPage() {
         </div>
       )}
 
-      {/* CATEGORIES TAB */}
+      {/* ------------------------------------------------------------- */}
+      {/* CATEGORIES TAB: FULL CRUD TABLE */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === 'categories' && (
         <div className="bg-kith-card border border-kith-border overflow-x-auto">
           <table className="w-full text-left text-xs font-mono divide-y divide-kith-border">
@@ -518,53 +918,118 @@ export default function AdminPage() {
                 <th className="py-3.5 px-4">CATEGORY NAME</th>
                 <th className="py-3.5 px-4">SLUG</th>
                 <th className="py-3.5 px-4">DESCRIPTION</th>
-                <th className="py-3.5 px-4 text-right">ORDER</th>
+                <th className="py-3.5 px-4">PRODUCTS</th>
+                <th className="py-3.5 px-4 text-right">CRUD ACTIONS</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-kith-border/60">
-              {categories.map((cat) => (
-                <tr key={cat.id} className="hover:bg-kith-subBg/50 transition-colors">
-                  <td className="py-3 px-4 font-bold text-kith-bone uppercase">{cat.name}</td>
-                  <td className="py-3 px-4 text-sky-400">{cat.slug}</td>
-                  <td className="py-3 px-4 text-kith-muted max-w-md truncate">{cat.description || '—'}</td>
-                  <td className="py-3 px-4 text-right font-bold text-kith-bone">{cat.display_order}</td>
-                </tr>
-              ))}
+              {categories.map((cat) => {
+                const prodCount = products.filter((p) => p.category?.slug === cat.slug).length;
+                return (
+                  <tr key={cat.id} className="hover:bg-kith-subBg/50 transition-colors">
+                    <td className="py-3.5 px-4 font-bold text-kith-bone uppercase">{cat.name}</td>
+                    <td className="py-3.5 px-4 text-sky-400 font-mono">{cat.slug}</td>
+                    <td className="py-3.5 px-4 text-kith-muted max-w-md truncate">
+                      {cat.description || '—'}
+                    </td>
+                    <td className="py-3.5 px-4 text-kith-bone font-bold">{prodCount} items</td>
+                    <td className="py-3.5 px-4 text-right space-x-1.5 whitespace-nowrap">
+                      <button
+                        onClick={() => openEditCategoryModal(cat)}
+                        className="p-1.5 inline-block text-sky-400 hover:text-sky-300 border border-kith-border hover:border-sky-400/50"
+                        title="Edit Category"
+                      >
+                        <Edit className="w-3.5 h-3.5" />
+                      </button>
+                      <button
+                        onClick={() => handleDeleteCategory(cat.id, cat.name)}
+                        className="p-1.5 inline-block text-rose-500 hover:text-rose-400 border border-kith-border hover:border-rose-400/50"
+                        title="Delete Category"
+                      >
+                        <Trash2 className="w-3.5 h-3.5" />
+                      </button>
+                    </td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>
       )}
 
-      {/* SERVICES TAB */}
+      {/* ------------------------------------------------------------- */}
+      {/* SERVICES TAB: FULL CRUD CARDS */}
+      {/* ------------------------------------------------------------- */}
       {activeTab === 'services' && (
-        <div className="space-y-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {services.map((srv, idx) => (
-            <div key={srv.id} className="bg-kith-card border border-kith-border p-6 space-y-3">
-              <div className="flex justify-between items-start">
-                <div>
-                  <span className="text-[10px] font-mono text-kith-darkMuted uppercase">SERVICE 0{idx + 1}</span>
-                  <h3 className="text-lg font-bold text-kith-bone uppercase">{srv.title}</h3>
-                  <p className="text-xs text-kith-muted">{srv.subtitle}</p>
+            <div
+              key={srv.id}
+              className="bg-kith-card border border-kith-border p-6 space-y-4 flex flex-col justify-between"
+            >
+              <div className="space-y-3">
+                <div className="flex justify-between items-start">
+                  <span className="text-[10px] font-mono text-kith-darkMuted uppercase">
+                    SERVICE 0{idx + 1}
+                  </span>
+                  <span className="px-2.5 py-0.5 bg-emerald-500/10 text-emerald-400 text-[10px] font-mono border border-emerald-500/30">
+                    {srv.price_range || 'Custom Quote'}
+                  </span>
                 </div>
-                <span className="px-3 py-1 bg-emerald-500/10 text-emerald-500 text-xs font-mono border border-emerald-500/30">
-                  {srv.price_range || 'Custom Quote'}
-                </span>
+                <h3 className="text-base font-bold text-kith-bone uppercase font-mono">{srv.title}</h3>
+                <p className="text-xs text-kith-muted font-mono leading-relaxed">{srv.description}</p>
+                {srv.specifications && srv.specifications.length > 0 && (
+                  <div className="space-y-1 pt-2 border-t border-kith-border">
+                    <span className="text-[10px] font-mono text-kith-darkMuted uppercase block">
+                      Scope of Work:
+                    </span>
+                    {srv.specifications.map((spec, sIdx) => (
+                      <div key={sIdx} className="text-[11px] font-mono text-kith-bone flex items-center gap-1.5">
+                        <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
+                        <span>{spec}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
-              <p className="text-xs font-mono text-kith-bone">{srv.description}</p>
+
+              {/* CRUD Action Buttons */}
+              <div className="pt-4 border-t border-kith-border flex items-center justify-end gap-2">
+                <button
+                  onClick={() => openEditServiceModal(srv)}
+                  className="px-3 py-1.5 bg-kith-subBg border border-kith-border hover:border-sky-400 text-sky-400 text-xs font-mono uppercase flex items-center gap-1"
+                >
+                  <Edit className="w-3.5 h-3.5" /> Edit
+                </button>
+                <button
+                  onClick={() => handleDeleteService(srv.id, srv.title)}
+                  className="px-3 py-1.5 bg-kith-subBg border border-kith-border hover:border-rose-400 text-rose-500 text-xs font-mono uppercase flex items-center gap-1"
+                >
+                  <Trash2 className="w-3.5 h-3.5" /> Delete
+                </button>
+              </div>
             </div>
           ))}
         </div>
       )}
 
-      {/* ------------------------------------------------------------------ */}
-      {/* CREATE PRODUCT MODAL (WITH MULTI-IMAGE SUPPORT) */}
-      {/* ------------------------------------------------------------------ */}
+      {/* ------------------------------------------------------------- */}
+      {/* PRODUCT CREATE / EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
       {isProductModalOpen && (
         <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
           <div className="relative w-full max-w-2xl max-h-[90vh] overflow-y-auto bg-kith-card border border-kith-border p-6 sm:p-8 space-y-6 shadow-2xl">
             <div className="flex items-center justify-between border-b border-kith-border pb-4">
-              <h2 className="text-xl font-extrabold uppercase text-kith-bone tracking-tight flex items-center gap-2">
-                <Plus className="w-5 h-5 text-amber-500" /> ADD NEW EQUIPMENT ITEM
+              <h2 className="text-xl font-extrabold uppercase text-kith-bone tracking-tight flex items-center gap-2 font-mono">
+                {editingProductId ? (
+                  <>
+                    <Edit className="w-5 h-5 text-sky-400" /> EDIT EQUIPMENT ITEM
+                  </>
+                ) : (
+                  <>
+                    <Plus className="w-5 h-5 text-amber-500" /> ADD NEW EQUIPMENT ITEM
+                  </>
+                )}
               </h2>
               <button
                 onClick={() => setIsProductModalOpen(false)}
@@ -574,7 +1039,7 @@ export default function AdminPage() {
               </button>
             </div>
 
-            <form onSubmit={handleCreateProduct} className="space-y-4 text-xs font-mono">
+            <form onSubmit={handleSaveProduct} className="space-y-4 text-xs font-mono">
               {/* Product Name */}
               <div className="space-y-1">
                 <label className="text-[10px] uppercase text-kith-muted">EQUIPMENT NAME *</label>
@@ -647,7 +1112,9 @@ export default function AdminPage() {
 
               {/* Technical Specifications */}
               <div className="space-y-2 border-t border-kith-border pt-4">
-                <label className="text-[10px] uppercase text-kith-bone font-bold block">TECHNICAL SPECIFICATIONS</label>
+                <label className="text-[10px] uppercase text-kith-bone font-bold block">
+                  TECHNICAL SPECIFICATIONS
+                </label>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                   <input
                     type="text"
@@ -687,7 +1154,7 @@ export default function AdminPage() {
                     <ImageIcon className="w-4 h-4 text-amber-500" />
                     PRODUCT PHOTOS (MULTIPLE ALLOWED)
                   </label>
-                  <span className="text-[10px] text-kith-muted">{prodImageUrls.length} photo(s) selected</span>
+                  <span className="text-[10px] text-kith-muted">{prodImageUrls.length} photo(s)</span>
                 </div>
 
                 {/* Upload Multiple Files */}
@@ -727,7 +1194,10 @@ export default function AdminPage() {
                 {prodImageUrls.length > 0 && (
                   <div className="grid grid-cols-4 sm:grid-cols-6 gap-2 pt-2">
                     {prodImageUrls.map((url, idx) => (
-                      <div key={idx} className="relative group w-full aspect-square border border-kith-border bg-kith-subBg overflow-hidden">
+                      <div
+                        key={idx}
+                        className="relative group w-full aspect-square border border-kith-border bg-kith-subBg overflow-hidden"
+                      >
                         <Image src={url} alt={`Photo ${idx + 1}`} fill className="object-cover" />
                         <button
                           type="button"
@@ -774,7 +1244,187 @@ export default function AdminPage() {
                   disabled={submitting || uploadingImage}
                   className="px-6 py-2.5 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover uppercase tracking-widest font-bold flex items-center gap-2 shadow-lg"
                 >
-                  {submitting ? 'SAVING ITEM...' : 'SAVE PRODUCT & GALLERY'}
+                  {submitting ? 'SAVING...' : editingProductId ? 'UPDATE PRODUCT' : 'SAVE PRODUCT & GALLERY'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* CATEGORY CREATE / EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isCategoryModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
+          <div className="relative w-full max-w-lg bg-kith-card border border-kith-border p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-kith-border pb-4">
+              <h2 className="text-lg font-extrabold uppercase text-kith-bone tracking-tight font-mono flex items-center gap-2">
+                {editingCategoryId ? <Edit className="w-4 h-4 text-sky-400" /> : <Plus className="w-4 h-4 text-amber-500" />}
+                {editingCategoryId ? 'EDIT CATEGORY' : 'ADD NEW CATEGORY'}
+              </h2>
+              <button onClick={() => setIsCategoryModalOpen(false)} className="p-1 text-kith-muted hover:text-kith-bone">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveCategory} className="space-y-4 text-xs font-mono">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-kith-muted">CATEGORY NAME *</label>
+                <input
+                  type="text"
+                  required
+                  value={catName}
+                  onChange={(e) => setCatName(e.target.value)}
+                  placeholder="e.g. Solar Generators & UPS"
+                  className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none focus:border-kith-bone"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-kith-muted">SLUG (URL KEY)</label>
+                  <input
+                    type="text"
+                    value={catSlug}
+                    onChange={(e) => setCatSlug(e.target.value)}
+                    placeholder="e.g. solar-generators"
+                    className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-kith-muted">DISPLAY ORDER</label>
+                  <input
+                    type="number"
+                    value={catDisplayOrder}
+                    onChange={(e) => setCatDisplayOrder(Number(e.target.value))}
+                    className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-kith-muted">DESCRIPTION</label>
+                <textarea
+                  rows={3}
+                  value={catDescription}
+                  onChange={(e) => setCatDescription(e.target.value)}
+                  placeholder="Brief description of items in this category..."
+                  className="w-full bg-kith-subBg border border-kith-border p-3 text-kith-bone focus:outline-none"
+                />
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-kith-border">
+                <button
+                  type="button"
+                  onClick={() => setIsCategoryModalOpen(false)}
+                  className="px-5 py-2.5 border border-kith-border text-kith-muted hover:text-kith-bone"
+                >
+                  CANCEL
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-6 py-2.5 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover uppercase tracking-widest font-bold shadow-lg"
+                >
+                  {submitting ? 'SAVING...' : editingCategoryId ? 'UPDATE CATEGORY' : 'SAVE CATEGORY'}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {/* ------------------------------------------------------------- */}
+      {/* SERVICE CREATE / EDIT MODAL */}
+      {/* ------------------------------------------------------------- */}
+      {isServiceModalOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/70 backdrop-blur-md animate-in fade-in">
+          <div className="relative w-full max-w-lg bg-kith-card border border-kith-border p-6 sm:p-8 space-y-6 shadow-2xl">
+            <div className="flex items-center justify-between border-b border-kith-border pb-4">
+              <h2 className="text-lg font-extrabold uppercase text-kith-bone tracking-tight font-mono flex items-center gap-2">
+                {editingServiceId ? <Edit className="w-4 h-4 text-sky-400" /> : <Plus className="w-4 h-4 text-amber-500" />}
+                {editingServiceId ? 'EDIT SERVICE' : 'ADD TECHNICAL SERVICE'}
+              </h2>
+              <button onClick={() => setIsServiceModalOpen(false)} className="p-1 text-kith-muted hover:text-kith-bone">
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <form onSubmit={handleSaveService} className="space-y-4 text-xs font-mono">
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-kith-muted">SERVICE TITLE *</label>
+                <input
+                  type="text"
+                  required
+                  value={srvTitle}
+                  onChange={(e) => setSrvTitle(e.target.value)}
+                  placeholder="e.g. Commercial Sound & Acoustic Tuning"
+                  className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none focus:border-kith-bone"
+                />
+              </div>
+
+              <div className="grid grid-cols-2 gap-4">
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-kith-muted">PRICE RANGE TAG</label>
+                  <input
+                    type="text"
+                    value={srvPriceRange}
+                    onChange={(e) => setSrvPriceRange(e.target.value)}
+                    placeholder="e.g. Custom Quote / From 15,000 ETB"
+                    className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none"
+                  />
+                </div>
+                <div className="space-y-1">
+                  <label className="text-[10px] uppercase text-kith-muted">SUBTITLE</label>
+                  <input
+                    type="text"
+                    value={srvSubtitle}
+                    onChange={(e) => setSrvSubtitle(e.target.value)}
+                    placeholder="Short summary tagline..."
+                    className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none"
+                  />
+                </div>
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-kith-muted">DESCRIPTION</label>
+                <textarea
+                  rows={2}
+                  value={srvDescription}
+                  onChange={(e) => setSrvDescription(e.target.value)}
+                  placeholder="Complete service offering overview..."
+                  className="w-full bg-kith-subBg border border-kith-border p-3 text-kith-bone focus:outline-none"
+                />
+              </div>
+
+              <div className="space-y-1">
+                <label className="text-[10px] uppercase text-kith-muted">
+                  SCOPE OF WORK / SPECIFICATIONS (1 PER LINE)
+                </label>
+                <textarea
+                  rows={3}
+                  value={srvSpecsText}
+                  onChange={(e) => setSrvSpecsText(e.target.value)}
+                  placeholder="Site Survey & Load Sizing&#10;Inverter Commissioning&#10;Battery Health Diagnostics"
+                  className="w-full bg-kith-subBg border border-kith-border p-3 text-kith-bone focus:outline-none"
+                />
+              </div>
+
+              <div className="pt-4 flex items-center justify-end gap-3 border-t border-kith-border">
+                <button
+                  type="button"
+                  onClick={() => setIsServiceModalOpen(false)}
+                  className="px-5 py-2.5 border border-kith-border text-kith-muted hover:text-kith-bone"
+                >
+                  CANCEL
+                </button>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="px-6 py-2.5 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover uppercase tracking-widest font-bold shadow-lg"
+                >
+                  {submitting ? 'SAVING...' : editingServiceId ? 'UPDATE SERVICE' : 'SAVE SERVICE'}
                 </button>
               </div>
             </form>
