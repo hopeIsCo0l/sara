@@ -20,3 +20,14 @@ dist/
 # System / IDE
 .DS_Store
 *.log
+
+# Generated Documents & PDFs
+*.pdf
+*.docx
+Hope_Labs_*.pdf
+Sebrin_Trading_*.docx
+
+# Proposal Generation Scripts
+create_proposal_docx.py
+generate_pdfs.py
+generate_skymax_pdfs.py

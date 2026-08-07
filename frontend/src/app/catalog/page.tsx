@@ -105,7 +105,26 @@ export default function CatalogPage() {
           totalResults={filteredProducts.length}
         />
 
-        <div className="flex-1">
+        <div className="flex-1 space-y-6">
+          {/* FR-2 Solar Calculator Callout Banner */}
+          <div className="p-4 bg-gradient-to-r from-kith-subBg via-kith-card to-kith-subBg border border-kith-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+            <div className="space-y-1">
+              <div className="text-[10px] font-mono text-amber-500 uppercase tracking-widest font-bold">
+                ⚡ UNSURE ABOUT SOLAR SIZING OR INVERTER CAPACITY?
+              </div>
+              <p className="text-xs font-mono text-kith-muted">
+                Use our interactive Solar Calculator to enter your appliances or kW load and get an exact equipment match.
+              </p>
+            </div>
+            <a
+              href="/calculator"
+              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-black text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 flex-shrink-0 transition-colors shadow-md"
+            >
+              <span>LAUNCH CALCULATOR</span>
+              <span>→</span>
+            </a>
+          </div>
+
           <ProductGrid
             products={filteredProducts}
             onQuickView={(product) => setSelectedQuickView(product)}

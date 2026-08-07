@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Phone, Menu, X, ArrowRight, Sun, Volume2 } from 'lucide-react';
+import { Search, Phone, Menu, X, ArrowRight, Sun, Volume2, Zap } from 'lucide-react';
 import { COMPANY_SHORT_NAME, PRIMARY_PHONE, WHATSAPP_LINK } from '@/lib/constants';
 import { ThemeToggle, MobileThemeToggle } from '@/components/ThemeToggle';
 
@@ -17,6 +17,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
 
   const navLinks = [
     { label: 'EQUIPMENT CATALOG', href: '/catalog' },
+    { label: 'SOLAR CALCULATOR (kW)', href: '/calculator', highlight: true },
     { label: 'FEATURED PRODUCTS', href: '/#featured' },
     { label: 'SOLAR & SOUND SERVICES', href: '/services' },
     { label: 'ADMIN DESK', href: '/admin' },
@@ -54,11 +55,16 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-xs font-mono uppercase tracking-widest transition-colors py-1 relative ${
-                    isActive ? 'text-kith-bone font-bold' : 'text-kith-muted hover:text-kith-bone'
+                  className={`text-xs font-mono uppercase tracking-widest transition-colors py-1 relative flex items-center gap-1.5 ${
+                    isActive
+                      ? 'text-kith-bone font-bold'
+                      : link.highlight
+                      ? 'text-amber-500 font-semibold hover:text-amber-400'
+                      : 'text-kith-muted hover:text-kith-bone'
                   }`}
                 >
-                  {link.label}
+                  {link.highlight && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}
+                  <span>{link.label}</span>
                   {isActive && (
                     <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-kith-bone"></span>
                   )}

@@ -158,6 +158,57 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* FR-2 Solar Sizing Calculator Feature Section */}
+      <section className="max-w-[1700px] mx-auto px-4 sm:px-8">
+        <div className="p-8 sm:p-12 bg-gradient-to-br from-kith-subBg via-kith-card to-kith-subBg border border-kith-border flex flex-col lg:flex-row lg:items-center justify-between gap-8 relative overflow-hidden">
+          <div className="space-y-4 max-w-2xl relative z-10">
+            <div className="inline-flex items-center gap-2 px-3 py-1 bg-amber-500/10 border border-amber-500/30 text-amber-500 text-[10px] font-mono tracking-superwide uppercase">
+              <Zap className="w-3.5 h-3.5 animate-pulse" />
+              FR-2 // AUTOMATED SOLAR SIZING ENGINE
+            </div>
+            <h2 className="text-2xl sm:text-4xl font-extrabold uppercase tracking-tight text-kith-bone">
+              Calculate Your Household Solar Power & Inverter Sizing Instantly
+            </h2>
+            <p className="text-xs sm:text-sm font-mono text-kith-muted leading-relaxed">
+              Not sure which inverter or battery capacity you need? Select your household appliances (refrigerator, pump, TV, lights) or input your peak Kilowatts (kW) to get an automated sizing calculation with matching inventory kits.
+            </p>
+            <div className="pt-2 flex flex-wrap items-center gap-4">
+              <Link
+                href="/calculator"
+                className="px-8 py-4 bg-amber-500 hover:bg-amber-400 text-black text-xs font-mono font-bold uppercase tracking-widest flex items-center gap-2 transition-all shadow-lg"
+              >
+                <Sun className="w-4 h-4 text-black" />
+                <span>LAUNCH SOLAR CALCULATOR (kW)</span>
+                <ArrowRight className="w-4 h-4" />
+              </Link>
+            </div>
+          </div>
+
+          <div className="grid grid-cols-2 gap-4 lg:w-[450px] relative z-10 text-xs font-mono">
+            <div className="p-4 bg-kith-card border border-kith-border space-y-1">
+              <div className="text-[10px] text-kith-muted uppercase">Dual Input Modes</div>
+              <div className="text-sm font-bold text-kith-bone">Appliance / kW Input</div>
+              <div className="text-[10px] text-amber-500">Real-time load math</div>
+            </div>
+            <div className="p-4 bg-kith-card border border-kith-border space-y-1">
+              <div className="text-[10px] text-kith-muted uppercase">Battery Storage</div>
+              <div className="text-sm font-bold text-emerald-400">LiFePO4 Sizing</div>
+              <div className="text-[10px] text-kith-muted">Night backup autonomy</div>
+            </div>
+            <div className="p-4 bg-kith-card border border-kith-border space-y-1">
+              <div className="text-[10px] text-kith-muted uppercase">Solar PV Array</div>
+              <div className="text-sm font-bold text-sky-400">Tier-1 550W Panels</div>
+              <div className="text-[10px] text-kith-muted">Ethiopia peak sun hours</div>
+            </div>
+            <div className="p-4 bg-kith-card border border-kith-border space-y-1">
+              <div className="text-[10px] text-kith-muted uppercase">Direct Inquiry</div>
+              <div className="text-sm font-bold text-kith-bone">WhatsApp Order</div>
+              <div className="text-[10px] text-emerald-400">Pre-populated details</div>
+            </div>
+          </div>
+        </div>
+      </section>
+
       {/* Quick View Modal Overlay */}
       <QuickViewModal
         product={selectedQuickView}

@@ -62,6 +62,11 @@ export const Footer: React.FC = () => {
                 </Link>
               </li>
               <li>
+                <Link href="/calculator" className="hover:text-kith-bone transition-colors text-amber-500 font-semibold flex items-center gap-1">
+                  <span>SOLAR CALCULATOR (kW)</span>
+                </Link>
+              </li>
+              <li>
                 <Link href="/#featured" className="hover:text-kith-bone transition-colors">
                   FEATURED PRODUCTS
                 </Link>
