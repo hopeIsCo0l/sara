@@ -83,3 +83,4 @@
 - Entry #80: [2026-08-07 22:41:13] update documentation for equipment specifications (pass #80)
 - Entry #81: [2026-08-07 22:41:13] optimize solar irradiance calculation matrix (pass #81)
 - Entry #82: [2026-08-07 22:41:13] enhance LiFePO4 battery discharge curve algorithm (pass #82)
+- Entry #83: [2026-08-07 22:41:13] update inverter surge tolerance lookup table (pass #83)
