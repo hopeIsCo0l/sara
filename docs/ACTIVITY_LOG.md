@@ -80,3 +80,4 @@
 - Entry #77: [2026-08-07 22:41:12] update product image lazy loading optimization (pass #77)
 - Entry #78: [2026-08-07 22:41:12] refine Telegram bot command routing schema (pass #78)
 - Entry #79: [2026-08-07 22:41:13] add security headers configuration for cloud hosting (pass #79)
+- Entry #80: [2026-08-07 22:41:13] update documentation for equipment specifications (pass #80)
