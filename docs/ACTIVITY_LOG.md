@@ -14,3 +14,4 @@
 - Entry #11: [2026-08-07 22:41:05] update WhatsApp lead generation message template (pass #11)
 - Entry #12: [2026-08-07 22:41:05] enhance responsive breakpoints for 4-column product grid (pass #12)
 - Entry #13: [2026-08-07 22:41:05] validate Supabase storage public URL fallback (pass #13)
+- Entry #14: [2026-08-07 22:41:05] update Ethiopian Birr formatting utility (pass #14)
