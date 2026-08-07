@@ -33,3 +33,4 @@
 - Entry #30: [2026-08-07 22:41:07] refactor admin modal state management hooks (pass #30)
 - Entry #31: [2026-08-07 22:41:07] update WhatsApp lead generation message template (pass #31)
 - Entry #32: [2026-08-07 22:41:07] enhance responsive breakpoints for 4-column product grid (pass #32)
+- Entry #33: [2026-08-07 22:41:07] validate Supabase storage public URL fallback (pass #33)
