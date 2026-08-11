@@ -88,10 +88,10 @@ export default function CatalogPage() {
           SEBRIN TRADING PLC // FULL EQUIPMENT CATALOG
         </div>
         <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase text-kith-bone">
-          SOLAR ENERGY & SOUND EQUIPMENT SHOWCASE
+          SOLAR ENERGY EQUIPMENT SHOWCASE
         </h1>
         <p className="text-xs font-mono text-kith-muted max-w-2xl">
-          Filter through our Tier-1 solar panels, hybrid pure sine wave inverters, LiFePO4 lithium batteries, powered stage loudspeakers, and audio mixing consoles.
+          Filter through our Tier-1 solar panels, hybrid pure sine wave inverters, and LiFePO4 lithium batteries.
         </p>
       </div>
 

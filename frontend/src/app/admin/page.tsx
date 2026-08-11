@@ -1120,7 +1120,7 @@ export default function AdminPage() {
                     type="text"
                     value={specBrand}
                     onChange={(e) => setSpecBrand(e.target.value)}
-                    placeholder="Brand (e.g. JBL / Jinko)"
+                    placeholder="Brand (e.g. Felicity / Jinko)"
                     className="bg-kith-subBg border border-kith-border px-3 py-2 text-kith-bone"
                   />
                   <input
@@ -1359,7 +1359,7 @@ export default function AdminPage() {
                   required
                   value={srvTitle}
                   onChange={(e) => setSrvTitle(e.target.value)}
-                  placeholder="e.g. Commercial Sound & Acoustic Tuning"
+                  placeholder="e.g. Commercial Solar Installation"
                   className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none focus:border-kith-bone"
                 />
               </div>

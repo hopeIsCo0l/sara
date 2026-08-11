@@ -38,8 +38,8 @@ async def cmd_start(message: Message, state: FSMContext):
     text = (
       "⚡ **SEBRIN TRADING PLC — TELEGRAM BOT ADMIN DESK**\n"
       "======================================\n"
-      "Welcome to the Sebrin Trading PLC Solar & Sound Equipment management panel.\n"
-      "Use the controls below to manage solar panels, inverters, speakers, amplifiers, stock levels, or view catalog analytics."
+      "Welcome to the Sebrin Trading PLC Solar Equipment management panel.\n"
+      "Use the controls below to manage solar panels, inverters, stock levels, or view catalog analytics."
     )
     await message.answer(text, reply_markup=get_main_admin_keyboard(), parse_mode="Markdown")
 

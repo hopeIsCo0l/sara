@@ -1,4 +1,4 @@
-# ⚡ Sebrin Trading PLC — Solar Energy & Sound Showcase
+# ⚡ Sebrin Trading PLC — Solar Energy Showcase
 
 > **High-Performance Equipment Showcase & Telegram Bot Admin Panel**  
 > *Addis Ababa, Ethiopia*
@@ -13,14 +13,14 @@
 
 ## 📖 Overview
 
-**Sebrin Trading PLC Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sebrin Trading PLC** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, deep cycle energy storage, and professional audio/speaker equipment with full technical specifications and direct WhatsApp inquiry integration.
+**Sebrin Trading PLC Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sebrin Trading PLC** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, and deep cycle energy storage with full technical specifications and direct WhatsApp inquiry integration.
 
 ---
 
 ## ✨ Key Features
 
 - ☀️ **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
-- 🔊 **Professional Audio & PA Systems**: 2000W Powered Stage Loudspeakers, 16-Channel Audio Consoles with DSP Effects, and UHF Wireless Microphones.
+
 - 🌓 **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
 - 💬 **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sebrin Trading's sales desk (`+251 95 483 4159`).
 - 🤖 **Telegram Admin Bot Panel**: Async Python Telegram Bot ([@sebrtradebot](https://t.me/sebrtradebot)) powered by `aiogram 3` and `FastAPI` for updating stock levels, uploading photos to Supabase Storage, and managing catalog items.

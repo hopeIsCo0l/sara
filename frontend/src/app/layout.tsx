@@ -14,19 +14,16 @@ const inter = Inter({
 
 export const metadata: Metadata = {
   title: {
-    default: 'Sebrin Trading PLC // Solar Energy & Professional Sound Equipment Showcase',
+    default: 'Sebrin Trading PLC // Solar Energy Equipment Showcase',
     template: '%s | Sebrin Trading PLC',
   },
-  description: 'Premier supplier in Addis Ababa, Ethiopia. Tier-1 Solar Panels, Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Batteries, and High-Fidelity Professional Stage Sound Equipment.',
+  description: 'Premier supplier in Addis Ababa, Ethiopia. Tier-1 Solar Panels, Hybrid Pure Sine Wave Inverters, and LiFePO4 Lithium Batteries.',
   keywords: [
     'Sebrin Trading PLC',
     'Solar Energy Ethiopia',
     'Solar Panels Addis Ababa',
     'Hybrid Inverters Ethiopia',
     'Lithium LiFePO4 Battery',
-    'Professional Sound Equipment',
-    'PA Stage Speakers',
-    'Audio Mixing Consoles',
     'Solar Sizing Calculator',
   ],
   authors: [{ name: 'Sebrin Trading PLC' }],
@@ -40,22 +37,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://sebrin.et',
-    title: 'Sebrin Trading PLC // Solar Energy & High-Fidelity Sound Systems',
-    description: 'Explore high-efficiency solar panels, hybrid inverters, lithium batteries, powered loudspeakers, and audio mixing consoles in Addis Ababa, Ethiopia.',
+    title: 'Sebrin Trading PLC // Solar Energy Systems',
+    description: 'Explore high-efficiency solar panels, hybrid inverters, and lithium batteries in Addis Ababa, Ethiopia.',
     siteName: 'Sebrin Trading PLC',
     images: [
       {
         url: 'https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1200&auto=format&fit=crop',
         width: 1200,
         height: 630,
-        alt: 'Sebrin Trading Solar & Sound Equipment Showcase',
+        alt: 'Sebrin Trading Solar Equipment Showcase',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'Sebrin Trading PLC // Solar & Sound Equipment',
-    description: 'Tier-1 Solar Panels, Hybrid Inverters, Lithium Battery Banks & Commercial Loudspeakers in Ethiopia.',
+    title: 'Sebrin Trading PLC // Solar Equipment',
+    description: 'Tier-1 Solar Panels, Hybrid Inverters, and Lithium Battery Banks in Ethiopia.',
     images: ['https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1200&auto=format&fit=crop'],
   },
   robots: {

@@ -3,7 +3,7 @@
 import React, { useState, useEffect } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { ArrowRight, Sun, Volume2, ShieldCheck, Zap, Sparkles } from 'lucide-react';
+import { ArrowRight, Sun, ShieldCheck, Zap, Sparkles } from 'lucide-react';
 import { getProducts } from '@/lib/supabase';
 import { Product } from '@/lib/types';
 import { ProductGrid } from '@/components/ProductGrid';
@@ -30,7 +30,7 @@ export default function HomePage() {
         <div className="absolute inset-0 z-0 opacity-20 dark:opacity-40">
           <Image
             src="https://images.unsplash.com/photo-1508514177221-188b1cf16e9d?q=80&w=1800&auto=format&fit=crop"
-            alt="Solar Panels & Sound Equipment Showcase Background"
+            alt="Solar Panels Showcase Background"
             fill
             priority
             className="object-cover object-center grayscale contrast-125"
@@ -54,7 +54,7 @@ export default function HomePage() {
 
             {/* Description */}
             <p className="text-xs sm:text-sm font-mono text-kith-muted leading-relaxed max-w-lg">
-              {BRAND_TAGLINE}. Discover high-capacity hybrid solar inverters, lithium batteries, commercial stage speakers, and audio consoles.
+              {BRAND_TAGLINE}. Discover high-capacity hybrid solar inverters and lithium batteries.
             </p>
 
             {/* CTA Buttons */}
@@ -70,29 +70,25 @@ export default function HomePage() {
                 href="/services"
                 className="px-8 py-4 bg-transparent text-kith-bone border border-kith-border hover:border-kith-bone text-xs font-mono tracking-widest uppercase font-semibold transition-all"
               >
-                SOLAR & SOUND SERVICES
+                SOLAR SERVICES
               </Link>
             </div>
           </div>
 
           {/* Bottom Specs Ticker */}
-          <div className="pt-12 grid grid-cols-2 md:grid-cols-4 gap-4 border-t border-kith-border text-xs font-mono text-kith-muted">
-            <div>
-              <span className="text-[10px] text-kith-darkMuted uppercase block">SOLAR PANELS & INVERTERS</span>
-              <span className="text-kith-bone font-semibold">TIER-1 N-TYPE & 5.5KW HYBRID</span>
-            </div>
-            <div>
-              <span className="text-[10px] text-kith-darkMuted uppercase block">ENERGY STORAGE</span>
-              <span className="text-kith-bone font-semibold">5.12KWH LIFEPO4 LITHIUM & GEL</span>
-            </div>
-            <div>
-              <span className="text-[10px] text-kith-darkMuted uppercase block">PRO AUDIO & SPEAKERS</span>
-              <span className="text-kith-bone font-semibold">2000W POWERED LOUDSPEAKERS</span>
-            </div>
-            <div>
-              <span className="text-[10px] text-kith-darkMuted uppercase block">LOCATION</span>
-              <span className="text-kith-bone font-semibold">ADDIS ABABA, ETHIOPIA</span>
-            </div>
+            <div className="pt-12 grid grid-cols-1 md:grid-cols-3 gap-4 border-t border-kith-border text-xs font-mono text-kith-muted">
+              <div>
+                <span className="text-[10px] text-kith-darkMuted uppercase block">SOLAR PANELS & INVERTERS</span>
+                <span className="text-kith-bone font-semibold">TIER-1 N-TYPE & 5.5KW HYBRID</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-kith-darkMuted uppercase block">ENERGY STORAGE</span>
+                <span className="text-kith-bone font-semibold">5.12KWH LIFEPO4 LITHIUM & GEL</span>
+              </div>
+              <div>
+                <span className="text-[10px] text-kith-darkMuted uppercase block">LOCATION</span>
+                <span className="text-kith-bone font-semibold">ADDIS ABABA, ETHIOPIA</span>
+              </div>
           </div>
         </div>
       </section>
@@ -105,7 +101,7 @@ export default function HomePage() {
               FEATURED INVENTORY
             </span>
             <h2 className="text-2xl font-bold tracking-tight text-kith-bone uppercase">
-              FEATURED SOLAR & SOUND EQUIPMENT
+              FEATURED SOLAR EQUIPMENT
             </h2>
           </div>
 
@@ -125,7 +121,7 @@ export default function HomePage() {
 
       {/* Capabilities Showcase */}
       <section className="max-w-[1700px] mx-auto px-4 sm:px-8">
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div className="bg-kith-card border border-kith-border p-8 space-y-3">
             <Sun className="w-6 h-6 text-amber-500" />
             <h3 className="text-sm font-mono tracking-widest text-kith-bone uppercase font-bold">
@@ -133,16 +129,6 @@ export default function HomePage() {
             </h3>
             <p className="text-xs font-mono text-kith-muted leading-relaxed">
               Tier-1 monocrystalline panels, hybrid pure sine wave inverters, MPPT controllers, and long-life lithium battery storage systems.
-            </p>
-          </div>
-
-          <div className="bg-kith-card border border-kith-border p-8 space-y-3">
-            <Volume2 className="w-6 h-6 text-sky-400" />
-            <h3 className="text-sm font-mono tracking-widest text-kith-bone uppercase font-bold">
-              COMMERCIAL SOUND EQUIPMENT
-            </h3>
-            <p className="text-xs font-mono text-kith-muted leading-relaxed">
-              High-output powered stage speakers, multi-channel audio mixing consoles, subwoofers, and wireless microphone systems.
             </p>
           </div>
 

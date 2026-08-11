@@ -27,17 +27,17 @@ export default function ServicesPage() {
     {
       step: '02',
       title: 'SYSTEM DESIGN & CAPACITY SIZING',
-      desc: 'Custom solar array sizing, hybrid inverter specification, lithium battery configuration, and speaker array modeling.',
+      desc: 'Custom solar array sizing, hybrid inverter specification, and lithium battery configuration.',
     },
     {
       step: '03',
       title: 'HARDWARE MOUNTING & WIRING',
-      desc: 'Professional roof panel mounting, DC disconnect wiring, LiFePO4 battery BMS setup, and audio console cabling.',
+      desc: 'Professional roof panel mounting, DC disconnect wiring, and LiFePO4 battery BMS setup.',
     },
     {
       step: '04',
       title: 'TESTING & COMMISSIONING',
-      desc: 'Full load testing under grid-tied/off-grid mode, MPPT charging calibration, and sound equalization tuning.',
+      desc: 'Full load testing under grid-tied/off-grid mode, and MPPT charging calibration.',
     },
   ];
 
@@ -47,13 +47,13 @@ export default function ServicesPage() {
       <div className="border-b border-kith-border pb-8 space-y-3">
         <div className="text-[10px] font-mono tracking-superwide text-kith-muted uppercase flex items-center gap-2">
           <Sun className="w-3.5 h-3.5 text-amber-500" />
-          SEBRIN TRADING PLC // SOLAR & SOUND SYSTEM ENGINEERING
+          SEBRIN TRADING PLC // SOLAR SYSTEM ENGINEERING
         </div>
         <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight uppercase text-kith-bone">
-          TURNKEY SOLAR INSTALLATION & COMMERCIAL AUDIO SOLUTIONS
+          TURNKEY SOLAR INSTALLATION SOLUTIONS
         </h1>
         <p className="text-xs sm:text-sm font-mono text-kith-muted max-w-3xl leading-relaxed">
-          From high-capacity 5.5kW hybrid solar inverter systems and LiFePO4 lithium battery banks to auditorium sound reinforcement and 2000W stage loudspeakers, we deliver turnkey technical solutions in Addis Ababa.
+          From high-capacity 5.5kW hybrid solar inverter systems and LiFePO4 lithium battery banks, we deliver turnkey technical solutions in Addis Ababa.
         </p>
       </div>
 
@@ -104,7 +104,7 @@ export default function ServicesPage() {
         <div className="pt-6 border-t border-kith-border flex flex-col sm:flex-row items-center justify-between gap-4">
           <div>
             <h4 className="text-sm font-mono font-bold text-kith-bone uppercase">
-              NEED CUSTOM SOLAR SIZING OR SOUND SYSTEM QUOTE?
+              NEED CUSTOM SOLAR SIZING QUOTE?
             </h4>
             <p className="text-xs font-mono text-kith-muted">
               Contact Sebrin Trading PLC directly via WhatsApp or phone to request an engineering consultation.
@@ -112,7 +112,7 @@ export default function ServicesPage() {
           </div>
 
           <a
-            href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hello Sebrin Trading PLC, I would like to request a quote for solar power sizing or sound system installation.')}`}
+            href={`${WHATSAPP_LINK}?text=${encodeURIComponent('Hello Sebrin Trading PLC, I would like to request a quote for solar power sizing.')}`}
             target="_blank"
             rel="noopener noreferrer"
             className="w-full sm:w-auto px-8 py-4 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono tracking-widest uppercase font-bold flex items-center justify-center gap-2 transition-all shadow-xl"

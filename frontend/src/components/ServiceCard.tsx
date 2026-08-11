@@ -79,7 +79,7 @@ export const ServiceCard: React.FC<ServiceCardProps> = ({ service, index }) => {
       {/* Footer Inquiry CTA */}
       <div className="pt-2 flex flex-col sm:flex-row items-center justify-between gap-4">
         <span className="text-[11px] font-mono text-kith-darkMuted uppercase">
-          CONSULT DIRECTLY WITH OUR SOLAR & AUDIO ENGINEERS
+          CONSULT DIRECTLY WITH OUR SOLAR ENGINEERS
         </span>
         <a
           href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sebrin Trading PLC, I am interested in consultation for service: ${service.title}`)}`}

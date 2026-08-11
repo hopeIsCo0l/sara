@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
         polling_task.cancel()
 
 app = FastAPI(
-    title="Sebrin Trading PLC — Solar & Sound Equipment API",
+    title="Sebrin Trading PLC — Solar Equipment API",
     description="Python Async FastAPI & aiogram 3 Telegram Bot Admin Panel Backend",
     version="1.0.0",
     lifespan=lifespan

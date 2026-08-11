@@ -73,7 +73,7 @@ export const Footer: React.FC = () => {
               </li>
               <li>
                 <Link href="/services" className="hover:text-kith-bone transition-colors">
-                  SOLAR & SOUND SERVICES
+                  SOLAR SERVICES
                 </Link>
               </li>
             </ul>
@@ -140,7 +140,7 @@ export const Footer: React.FC = () => {
           <div className="flex items-center gap-4">
             <span>ADDIS ABABA, ETHIOPIA</span>
             <span>•</span>
-            <span>SOLAR & SOUND SYSTEMS</span>
+            <span>SOLAR SYSTEMS</span>
           </div>
         </div>
       </div>

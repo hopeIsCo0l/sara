@@ -23,18 +23,6 @@ async def seed():
             "description": "Deep cycle gel batteries, LiFePO4 lithium storage packs, and MPPT controllers.",
             "display_order": 2,
         },
-        {
-            "name": "Professional Speakers & PA Systems",
-            "slug": "pro-speakers-pa",
-            "description": "Commercial loudspeakers, stage monitors, subwoofers, and PA line arrays.",
-            "display_order": 3,
-        },
-        {
-            "name": "Amplifiers & Audio Mixers",
-            "slug": "amplifiers-audio",
-            "description": "High-power audio amplifiers, multi-channel sound mixers, and wireless mic systems.",
-            "display_order": 4,
-        },
     ]
 
     for cat in categories_data:
@@ -106,34 +94,6 @@ async def seed():
             "stock_status": "in_stock",
             "image_url": "https://images.unsplash.com/photo-1619642751034-765dfdf7c58e?q=80&w=1000&auto=format&fit=crop",
         },
-        {
-            "category_id": cat_map.get("pro-speakers-pa"),
-            "name": "JBL SRX835P 15\" 3-Way Powered Professional Loudspeaker (2000W)",
-            "slug": "jbl-srx835p-15-3-way-powered-professional-loudspeaker-2000w",
-            "sku": "SEB-SPK-835P",
-            "price": 185000,
-            "currency": "ETB",
-            "description": "Premium 15-inch 3-way powered sound reinforcement speaker equipped with Crown Class-D 2000W amplification.",
-            "details": {"brand": "JBL Professional", "power_output": "2000W Peak", "warranty": "3-Year Warranty"},
-            "is_featured": True,
-            "is_visible": True,
-            "stock_status": "in_stock",
-            "image_url": "https://images.unsplash.com/photo-1545454675-3531b543be5d?q=80&w=1000&auto=format&fit=crop",
-        },
-        {
-            "category_id": cat_map.get("amplifiers-audio"),
-            "name": "Yamaha EMX5016CF 16-Channel 1000W Powered Audio Mixer",
-            "slug": "yamaha-emx5016cf-16-channel-1000w-powered-audio-mixer",
-            "sku": "SEB-MIX-5016",
-            "price": 125000,
-            "currency": "ETB",
-            "description": "High-performance 16-input powered audio console with 500W + 500W stereo amplifier and dual SPX DSP effects.",
-            "details": {"brand": "Yamaha Audio", "power_output": "1000W Total", "warranty": "2-Year Warranty"},
-            "is_featured": True,
-            "is_visible": True,
-            "stock_status": "in_stock",
-            "image_url": "https://images.unsplash.com/photo-1598488035139-bdbb2231ce04?q=80&w=1000&auto=format&fit=crop",
-        },
     ]
 
     for p in products_data:
@@ -162,15 +122,6 @@ async def seed():
             "price_range": "Custom Quote",
             "display_order": 1
         },
-        {
-            "title": "Commercial Sound System & Acoustic Engineering Setup",
-            "slug": "commercial-sound-system-acoustic-engineering-setup",
-            "subtitle": "Professional audio system installation for auditoriums, churches, venues, and commercial spaces.",
-            "description": "End-to-end sound system design including loudspeaker placement modeling, active mixer tuning, and wireless microphone distribution.",
-            "specifications": ["Venue Acoustic Measurement", "Powered Speaker Array Tuning", "Wireless Mic Scan"],
-            "price_range": "Custom Quote",
-            "display_order": 2
-        }
     ]
 
     for srv in services_data:

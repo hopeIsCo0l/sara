@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Search, Phone, Menu, X, ArrowRight, Sun, Volume2, Zap } from 'lucide-react';
+import { Search, Phone, Menu, X, ArrowRight, Sun, Zap } from 'lucide-react';
 import { COMPANY_SHORT_NAME, PRIMARY_PHONE, WHATSAPP_LINK } from '@/lib/constants';
 import { ThemeToggle, MobileThemeToggle } from '@/components/ThemeToggle';
 
@@ -19,7 +19,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
     { label: 'EQUIPMENT CATALOG', href: '/catalog' },
     { label: 'SOLAR CALCULATOR (kW)', href: '/calculator', highlight: true },
     { label: 'FEATURED PRODUCTS', href: '/#featured' },
-    { label: 'SOLAR & SOUND SERVICES', href: '/services' },
+    { label: 'SOLAR SERVICES', href: '/services' },
     { label: 'ADMIN DESK', href: '/admin' },
   ];
 
@@ -28,7 +28,7 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
       {/* Top Banner */}
       <div className="bg-kith-subBg border-b border-kith-border px-4 py-1.5 text-center text-[10px] uppercase tracking-superwide font-mono text-kith-muted flex items-center justify-between">
         <span className="hidden sm:inline text-kith-darkMuted flex items-center gap-1">
-          <Sun className="w-3 h-3 text-amber-500 inline" /> SOLAR & <Volume2 className="w-3 h-3 text-sky-400 inline" /> SOUND
+          <Sun className="w-3 h-3 text-amber-500 inline" /> SOLAR ENERGY
         </span>
         <span className="w-full sm:w-auto flex items-center justify-center gap-2">
           <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>

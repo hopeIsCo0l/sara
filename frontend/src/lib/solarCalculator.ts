@@ -66,7 +66,7 @@ export const PRESET_APPLIANCES: ApplianceItem[] = [
     defaultHours: 6,
     defaultQuantity: 1,
     iconName: 'Tv',
-    description: 'Smart TV, soundbar & decoder',
+    description: 'Smart TV & decoder',
   },
   {
     id: 'lights',

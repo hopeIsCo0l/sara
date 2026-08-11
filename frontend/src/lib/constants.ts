@@ -1,8 +1,8 @@
 export const COMPANY_NAME = 'Sebrin Trading PLC';
 export const COMPANY_SHORT_NAME = 'SEBRIN TRADING';
-export const BRAND_TAGLINE = 'Empowering Energy & Sound Excellence — Premium Solar Power Systems & High-Fidelity Audio Equipment';
-export const HERO_HEADER = 'ADVANCED SOLAR ENERGY & HIGH-FIDELITY AUDIO EQUIPMENT';
-export const SHORT_ABOUT_US = 'Sebrin Trading PLC is a premier supplier based in Addis Ababa, Ethiopia, specializing in high-efficiency solar panels, hybrid inverters, deep-cycle solar batteries, commercial sound systems, and professional speaker equipment.';
+export const BRAND_TAGLINE = 'Empowering Energy Excellence — Premium Solar Power Systems & Solutions';
+export const HERO_HEADER = 'ADVANCED SOLAR ENERGY EQUIPMENT';
+export const SHORT_ABOUT_US = 'Sebrin Trading PLC is a premier supplier based in Addis Ababa, Ethiopia, specializing in high-efficiency solar panels, hybrid inverters, and deep-cycle solar batteries.';
 
 export const PRIMARY_EMAIL = 'mube@gmail.com';
 export const SECONDARY_EMAIL = 'mube123@gmail.com';
