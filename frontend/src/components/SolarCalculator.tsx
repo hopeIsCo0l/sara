@@ -1,6 +1,6 @@
 'use client';
 
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import Link from 'next/link';
 import {
   Sun,
@@ -39,9 +39,10 @@ import {
   calculateSolarSizing,
   getMatchedSolarPackages,
   buildWhatsAppSizingMessage,
-  SolarPackageRecommendation,
 } from '@/lib/solarCalculator';
 import { WHATSAPP_NUMBER, PRIMARY_PHONE, TELEGRAM_LINK } from '@/lib/constants';
+import { getDynamicSolarPackages } from '@/lib/supabase';
+import { Product } from '@/lib/types';
 
 interface SolarCalculatorProps {
   initialMode?: 'appliance' | 'direct';
@@ -171,12 +172,22 @@ export const SolarCalculator: React.FC<SolarCalculatorProps> = ({
   }, [mode, quantities, hours, customAppliances, directPeakKW, directDailyKWh, autonomyHours]);
 
   // Packages list
-  const matchedPackages = useMemo(() => {
-    return getMatchedSolarPackages(calculation);
-  }, [calculation]);
+  const [matchedPackages, setMatchedPackages] = useState<Product[]>([]);
+
+  useEffect(() => {
+    async function loadPackages() {
+      const pkgs = await getDynamicSolarPackages(calculation.totalPeakKW);
+      setMatchedPackages(pkgs);
+      // Ensure we have a valid selection
+      if (pkgs.length > 0 && !pkgs.find(p => p.id === selectedPackageId)) {
+        setSelectedPackageId(pkgs[1]?.id || pkgs[0].id);
+      }
+    }
+    loadPackages();
+  }, [calculation.totalPeakKW]);
 
   const activePackage = useMemo(() => {
-    return matchedPackages.find((p) => p.id === selectedPackageId) || matchedPackages[1];
+    return matchedPackages.find((p) => p.id === selectedPackageId) || matchedPackages[0];
   }, [matchedPackages, selectedPackageId]);
 
   // WhatsApp inquiry URL
@@ -193,7 +204,7 @@ Daily Energy Consumption: ${calculation.dailyEnergyKWh} kWh/day
 Recommended Inverter: ${calculation.recommendedInverterKW} kW (${calculation.recommendedInverterKVA} kVA)
 Recommended Battery Storage: ${calculation.recommendedBatteryKWh} kWh LiFePO4
 Recommended Solar PV Array: ${calculation.recommendedPanelCount550W}x 550W Panels (${calculation.recommendedSolarArrayWp} Wp)
-Recommended Package: ${activePackage.title} (~${activePackage.estimatedPriceETB.toLocaleString()} ETB)
+Recommended Package: ${activePackage?.name || 'Custom Setup'} (~${(activePackage?.price || 0).toLocaleString()} ETB)
 Inquiries: +251 95 483 4159 (WhatsApp)`;
 
     navigator.clipboard.writeText(text);
@@ -807,19 +818,20 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {matchedPackages.map((pkg) => {
             const isSelected = selectedPackageId === pkg.id;
+            const attr = pkg.solar_attributes?.[0];
             return (
               <div
                 key={pkg.id}
                 onClick={() => setSelectedPackageId(pkg.id)}
                 className={`cursor-pointer p-6 border transition-all relative flex flex-col justify-between space-y-6 ${
-                  pkg.isPopular
+                  pkg.is_featured
                     ? 'bg-kith-card border-amber-500/80 ring-1 ring-amber-500/30'
                     : isSelected
                     ? 'bg-kith-card border-kith-bone'
                     : 'bg-kith-subBg border-kith-border hover:border-kith-border/90'
                 }`}
               >
-                {pkg.isPopular && (
+                {pkg.is_featured && (
                   <div className="absolute -top-3 right-6 bg-amber-500 text-black text-[10px] font-mono font-extrabold px-3 py-0.5 uppercase tracking-widest shadow-md">
                     ★ MOST POPULAR FIT
                   </div>
@@ -828,10 +840,10 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                 <div className="space-y-4">
                   <div>
                     <span className="text-[10px] font-mono uppercase tracking-widest text-kith-muted block">
-                      {pkg.suitableKWRange}
+                      Matched for {attr?.min_kw_load} - {attr?.max_kw_load} kW Load
                     </span>
                     <h4 className="text-lg font-bold font-mono text-kith-bone uppercase mt-1">
-                      {pkg.title}
+                      {pkg.name}
                     </h4>
                   </div>
 
@@ -841,7 +853,7 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                       Estimated System Investment:
                     </span>
                     <div className="text-2xl font-black font-mono text-kith-bone">
-                      ~{pkg.estimatedPriceETB.toLocaleString()}{' '}
+                      ~{pkg.price.toLocaleString()}{' '}
                       <span className="text-xs font-bold text-amber-500">ETB</span>
                     </div>
                   </div>
@@ -852,7 +864,7 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                       <Zap className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div>
                         <span className="text-kith-muted text-[11px] block">Inverter:</span>
-                        <span className="font-bold text-kith-bone">{pkg.inverter}</span>
+                        <span className="font-bold text-kith-bone">{attr?.inverter_kva || 'N/A'} kVA Hybrid Inverter</span>
                       </div>
                     </div>
 
@@ -860,7 +872,7 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                       <Battery className="w-3.5 h-3.5 text-emerald-400 flex-shrink-0 mt-0.5" />
                       <div>
                         <span className="text-kith-muted text-[11px] block">Battery Storage:</span>
-                        <span className="font-bold text-kith-bone">{pkg.battery}</span>
+                        <span className="font-bold text-kith-bone">{attr?.battery_capacity_kwh || 'N/A'} kWh Storage</span>
                       </div>
                     </div>
 
@@ -868,19 +880,17 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                       <Sun className="w-3.5 h-3.5 text-amber-500 flex-shrink-0 mt-0.5" />
                       <div>
                         <span className="text-kith-muted text-[11px] block">Solar PV Array:</span>
-                        <span className="font-bold text-kith-bone">{pkg.panels}</span>
+                        <span className="font-bold text-kith-bone">{attr?.wattage_wp || 'N/A'} Wp Solar Array</span>
                       </div>
                     </div>
                   </div>
 
                   {/* Features List */}
                   <div className="pt-2 space-y-1.5 text-[11px] font-mono text-kith-muted">
-                    {pkg.features.map((feat, idx) => (
-                      <div key={idx} className="flex items-center gap-1.5">
-                        <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0" />
-                        <span>{feat}</span>
-                      </div>
-                    ))}
+                    <div className="flex items-start gap-1.5">
+                      <CheckCircle2 className="w-3 h-3 text-emerald-500 flex-shrink-0 mt-0.5" />
+                      <span className="line-clamp-3">{pkg.description}</span>
+                    </div>
                   </div>
                 </div>
 
@@ -894,7 +904,7 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                     target="_blank"
                     rel="noopener noreferrer"
                     className={`w-full py-2.5 text-xs font-mono uppercase tracking-widest font-bold flex items-center justify-center gap-2 transition-all ${
-                      pkg.isPopular
+                      pkg.is_featured
                         ? 'bg-amber-500 text-black hover:bg-amber-400'
                         : 'bg-kith-bone text-black hover:bg-white'
                     }`}

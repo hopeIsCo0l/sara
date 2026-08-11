@@ -1,3 +1,5 @@
+import { Product } from './types';
+
 export interface ApplianceItem {
   id: string;
   name: string;
@@ -43,19 +45,7 @@ export interface SolarSystemCalculation {
   annualCO2ReductionKg: number;
 }
 
-export interface SolarPackageRecommendation {
-  id: string;
-  title: string;
-  tier: 'economy' | 'recommended' | 'premium';
-  inverter: string;
-  battery: string;
-  panels: string;
-  panelCount: number;
-  estimatedPriceETB: number;
-  suitableKWRange: string;
-  features: string[];
-  isPopular?: boolean;
-}
+
 
 export const PRESET_APPLIANCES: ApplianceItem[] = [
   {
@@ -261,93 +251,11 @@ export function calculateSolarSizing(
 }
 
 /**
- * Returns pre-configured matched solar packages based on user load calculation.
- */
-export function getMatchedSolarPackages(calc: SolarSystemCalculation): SolarPackageRecommendation[] {
-  const kw = calc.totalPeakKW;
-
-  // 1. Essential / Starter Kit
-  const economyPanels = Math.max(Math.round(calc.recommendedPanelCount550W * 0.75), 2);
-  const economyKWh = calc.recommendedBatteryKWh <= 5.12 ? 2.56 : 5.12;
-  const economyInverter = calc.recommendedInverterKW <= 3.5 ? '3.2kVA (24V) Pure Sine Inverter' : '5.5kVA (48V) Hybrid Inverter';
-  const economyPrice = Math.round(calc.estimatedSystemCostETB * 0.72);
-
-  // 2. Recommended Hybrid Kit
-  const recommendedPanels = calc.recommendedPanelCount550W;
-  const recommendedKWh = calc.recommendedBatteryKWh;
-  const recommendedInverter = `${calc.recommendedInverterKW}kW / ${calc.recommendedInverterKVA}kVA 48V Hybrid Inverter`;
-  const recommendedPrice = calc.estimatedSystemCostETB;
-
-  // 3. Heavy-Duty Pro / Off-Grid Kit
-  const proPanels = calc.recommendedPanelCount550W + 2;
-  const proKWh = Number((calc.recommendedBatteryKWh * 1.5).toFixed(2));
-  const proInverter = `${Math.ceil(calc.recommendedInverterKW * 1.3)}kW Heavy-Duty Smart Hybrid Inverter`;
-  const proPrice = Math.round(calc.estimatedSystemCostETB * 1.38);
-
-  return [
-    {
-      id: 'pkg-economy',
-      title: 'Essential Solar Backup Package',
-      tier: 'economy',
-      inverter: economyInverter,
-      battery: `${economyKWh} kWh Deep-Cycle Storage`,
-      panels: `${economyPanels}x 550W Tier-1 N-Type (${economyPanels * 550}Wp)`,
-      panelCount: economyPanels,
-      estimatedPriceETB: economyPrice,
-      suitableKWRange: `Up to ${Math.max(Number((kw * 0.8).toFixed(1)), 1.5)} kW Peak Load`,
-      features: [
-        'Essential daytime & evening backup',
-        'Automatic power transfer during outages',
-        'LCD status & battery monitoring',
-        'Complete mounting brackets & DC cables',
-      ],
-    },
-    {
-      id: 'pkg-recommended',
-      title: 'Full Household Hybrid Solar Kit',
-      tier: 'recommended',
-      isPopular: true,
-      inverter: recommendedInverter,
-      battery: `${recommendedKWh} kWh LiFePO4 Lithium Bank`,
-      panels: `${recommendedPanels}x 550W Tier-1 Monocrystalline (${calc.recommendedSolarArrayWp}Wp)`,
-      panelCount: recommendedPanels,
-      estimatedPriceETB: recommendedPrice,
-      suitableKWRange: `Matched for your exact ${kw} kW / ${calc.dailyEnergyKWh} kWh Load`,
-      features: [
-        '24/7 Zero-interruption uninterrupted power',
-        'High-efficiency Tier-1 TOPCon solar panels',
-        '6,000+ cycle long-life LiFePO4 battery',
-        'Dual AC output & smart generator control',
-        'Full Sebrin Trading warranty & local support',
-      ],
-    },
-    {
-      id: 'pkg-premium',
-      title: 'Heavy-Duty Commercial / Off-Grid Master Kit',
-      tier: 'premium',
-      inverter: proInverter,
-      battery: `${proKWh} kWh High-Capacity Lithium Pack`,
-      panels: `${proPanels}x 550W Tier-1 Panels (${proPanels * 550}Wp Array)`,
-      panelCount: proPanels,
-      estimatedPriceETB: proPrice,
-      suitableKWRange: `Heavy Continuous ${Number((kw * 1.4).toFixed(1))} kW Capacity`,
-      features: [
-        'Extended multi-day rainy weather autonomy',
-        'High surge capacity for AC & commercial pumps',
-        'Smart BMS with mobile app Wi-Fi monitoring',
-        'Surge arrestors, DC breakers & earthing included',
-        'Turnkey professional commissioning available',
-      ],
-    },
-  ];
-}
-
-/**
  * Builds WhatsApp message prefilled with sizing results.
  */
 export function buildWhatsAppSizingMessage(
   calc: SolarSystemCalculation,
-  selectedPackage?: SolarPackageRecommendation
+  selectedPackage?: Product
 ): string {
   let text = `Hello Sebrin Trading PLC,\n\n`;
   text += `I used your Solar Sizing Calculator (FR-2) on your website with the following requirements:\n\n`;
@@ -358,7 +266,7 @@ export function buildWhatsAppSizingMessage(
   text += `☀️ Recommended Solar Array: ${calc.recommendedPanelCount550W}x 550W Panels (${calc.recommendedSolarArrayWp} Wp)\n\n`;
 
   if (selectedPackage) {
-    text += `Interested in Package: *${selectedPackage.title}* (Est. ${selectedPackage.estimatedPriceETB.toLocaleString()} ETB)\n\n`;
+    text += `Interested in Package: *${selectedPackage.name}* (Est. ${selectedPackage.price.toLocaleString()} ETB)\n\n`;
   }
 
   text += `Please send me a formal quotation and product availability. Thank you!`;

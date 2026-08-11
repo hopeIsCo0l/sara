@@ -31,6 +31,18 @@ export interface ProductDetails {
   [key: string]: string | undefined;
 }
 
+export interface SolarAttribute {
+  id: string;
+  product_id: string;
+  product_type: string;
+  wattage_wp?: number;
+  inverter_kva?: number;
+  battery_capacity_kwh?: number;
+  min_kw_load: number;
+  max_kw_load: number;
+  created_at?: string;
+}
+
 export interface Product {
   id: string;
   category_id?: string;
@@ -46,6 +58,7 @@ export interface Product {
   is_visible: boolean;
   stock_status: StockStatus;
   images: ProductImage[];
+  solar_attributes?: SolarAttribute[];
   created_at: string;
   updated_at?: string;
 }

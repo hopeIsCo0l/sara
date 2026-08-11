@@ -105,6 +105,59 @@ export async function getProductBySlug(slug: string): Promise<Product | null> {
 }
 
 /**
+ * Fetch dynamic solar packages based on kW load
+ */
+export async function getDynamicSolarPackages(kwLoad: number): Promise<Product[]> {
+  const getMockMatches = () => {
+    return MOCK_PRODUCTS.filter(p => {
+      if (!p.solar_attributes || p.solar_attributes.length === 0) return false;
+      return p.solar_attributes.some(attr => attr.min_kw_load <= kwLoad && attr.max_kw_load >= kwLoad);
+    });
+  };
+
+  if (!supabase) {
+    return getMockMatches();
+  }
+
+  try {
+    const { data, error } = await supabase
+      .from('solar_attributes')
+      .select(`
+        *,
+        product:products(
+          *,
+          category:categories(*),
+          images:product_images(*)
+        )
+      `)
+      .lte('min_kw_load', kwLoad)
+      .gte('max_kw_load', kwLoad)
+      .eq('product_type', 'package_kit');
+
+    if (error || !data || data.length === 0) {
+      return getMockMatches();
+    }
+
+    return data.map((row: any) => ({
+      ...row.product,
+      solar_attributes: [{
+        id: row.id,
+        product_id: row.product_id,
+        product_type: row.product_type,
+        wattage_wp: row.wattage_wp,
+        inverter_kva: row.inverter_kva,
+        battery_capacity_kwh: row.battery_capacity_kwh,
+        min_kw_load: row.min_kw_load,
+        max_kw_load: row.max_kw_load,
+        created_at: row.created_at
+      }]
+    })) as Product[];
+  } catch (err) {
+    return getMockMatches();
+  }
+}
+
+/**
  * Fetch active services
  */
 export async function getServices(): Promise<Service[]> {
