@@ -1,4 +1,4 @@
-# ⚡ Sebrin Trading PLC — Solar Energy Showcase
+# Sebrin Trading PLC — Solar Energy Showcase
 
 > **High-Performance Equipment Showcase & Telegram Bot Admin Panel**  
 > *Addis Ababa, Ethiopia*
@@ -11,24 +11,24 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 **Sebrin Trading PLC Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sebrin Trading PLC** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, and deep cycle energy storage with full technical specifications and direct WhatsApp inquiry integration.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- ☀️ **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
+- **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
 
-- 🌓 **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
-- 💬 **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sebrin Trading's sales desk (`+251 95 483 4159`).
-- 🤖 **Telegram Admin Bot Panel**: Async Python Telegram Bot ([@sebrtradebot](https://t.me/sebrtradebot)) powered by `aiogram 3` and `FastAPI` for updating stock levels, uploading photos to Supabase Storage, and managing catalog items.
-- 📊 **Dynamic Filter & Sort Matrix**: Category selection, search query matching, stock availability filters, and range sliders in Ethiopian Birr (`ETB`).
+- **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
+- **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sebrin Trading's sales desk (`+251 95 483 4159`).
+- **Telegram Admin Bot Panel**: Async Python Telegram Bot ([@sebrtradebot](https://t.me/sebrtradebot)) powered by `aiogram 3` and `FastAPI` for updating stock levels, uploading photos to Supabase Storage, and managing catalog items.
+- **Dynamic Filter & Sort Matrix**: Category selection, search query matching, stock availability filters, and range sliders in Ethiopian Birr (`ETB`).
 
 ---
 
-## 🏢 Company Profile & Contact
+## Company Profile & Contact
 
 | Detail | Information |
 | :--- | :--- |
@@ -42,7 +42,7 @@
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -69,7 +69,7 @@
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### 1. Frontend Setup
 
@@ -97,7 +97,7 @@ Backend API will run on [http://localhost:8000](http://localhost:8000).
 
 ---
 
-## 🌐 1-Click Deployment Guide
+## 1-Click Deployment Guide
 
 ### Host Frontend on Vercel
 1. Push repository to GitHub.
@@ -116,6 +116,6 @@ Backend API will run on [http://localhost:8000](http://localhost:8000).
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the MIT License. Copyright © 2026 **Sebrin Trading PLC**. All rights reserved.
