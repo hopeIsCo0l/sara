@@ -6,6 +6,7 @@ import { Category, FilterState, Product } from '@/lib/types';
 import { FilterSidebar } from '@/components/FilterSidebar';
 import { ProductGrid } from '@/components/ProductGrid';
 import { QuickViewModal } from '@/components/QuickViewModal';
+import { Zap, Sun } from 'lucide-react';
 
 export default function CatalogPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -81,54 +82,60 @@ export default function CatalogPage() {
   }, [allProducts, filters]);
 
   return (
-    <div className="max-w-[1700px] mx-auto px-4 sm:px-8 py-10 space-y-8">
+    <div className="bg-gray-50 pb-20">
       {/* Header Banner */}
-      <div className="border-b border-kith-border pb-6 space-y-2">
-        <div className="text-[10px] font-mono tracking-superwide text-kith-muted uppercase">
-          SEBRIN TRADING PLC // FULL EQUIPMENT CATALOG
+      <div className="bg-white border-b border-gray-200 pt-10 pb-8">
+        <div className="max-w-[1700px] mx-auto px-4 sm:px-8 space-y-4">
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-kith-accent rounded-full text-[10px] font-bold tracking-widest uppercase">
+            <Sun className="w-3.5 h-3.5" />
+            Sara Power Solution plc // Full Catalog
+          </div>
+          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900 uppercase">
+            Solar Equipment Showcase
+          </h1>
+          <p className="text-sm text-gray-500 max-w-2xl font-medium">
+            Filter through our Tier-1 solar panels, hybrid pure sine wave inverters, and LiFePO4 lithium batteries.
+          </p>
         </div>
-        <h1 className="text-3xl sm:text-4xl font-extrabold tracking-tight uppercase text-kith-bone">
-          SOLAR ENERGY EQUIPMENT SHOWCASE
-        </h1>
-        <p className="text-xs font-mono text-kith-muted max-w-2xl">
-          Filter through our Tier-1 solar panels, hybrid pure sine wave inverters, and LiFePO4 lithium batteries.
-        </p>
       </div>
 
-      {/* Main Layout: Sticky Sidebar + 4-Column Grid */}
-      <div className="flex flex-col lg:flex-row gap-8">
-        <FilterSidebar
-          categories={categories}
-          filters={filters}
-          onFilterChange={handleFilterChange}
-          onReset={handleReset}
-          totalResults={filteredProducts.length}
-        />
-
-        <div className="flex-1 space-y-6">
-          {/* FR-2 Solar Calculator Callout Banner */}
-          <div className="p-4 bg-gradient-to-r from-kith-subBg via-kith-card to-kith-subBg border border-kith-border flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-            <div className="space-y-1">
-              <div className="text-[10px] font-mono text-amber-500 uppercase tracking-widest font-bold">
-                ⚡ UNSURE ABOUT SOLAR SIZING OR INVERTER CAPACITY?
-              </div>
-              <p className="text-xs font-mono text-kith-muted">
-                Use our interactive Solar Calculator to enter your appliances or kW load and get an exact equipment match.
-              </p>
-            </div>
-            <a
-              href="/calculator"
-              className="px-5 py-2.5 bg-amber-500 hover:bg-amber-400 text-black text-xs font-mono font-bold uppercase tracking-wider flex items-center justify-center gap-1.5 flex-shrink-0 transition-colors shadow-md"
-            >
-              <span>LAUNCH CALCULATOR</span>
-              <span>→</span>
-            </a>
-          </div>
-
-          <ProductGrid
-            products={filteredProducts}
-            onQuickView={(product) => setSelectedQuickView(product)}
+      <div className="max-w-[1700px] mx-auto px-4 sm:px-8 py-10">
+        {/* Main Layout: Sticky Sidebar + 4-Column Grid */}
+        <div className="flex flex-col lg:flex-row gap-8">
+          <FilterSidebar
+            categories={categories}
+            filters={filters}
+            onFilterChange={handleFilterChange}
+            onReset={handleReset}
+            totalResults={filteredProducts.length}
           />
+
+          <div className="flex-1 space-y-6">
+            {/* FR-2 Solar Calculator Callout Banner */}
+            <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow transition-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+              <div className="space-y-2">
+                <div className="text-xs text-amber-600 uppercase tracking-widest font-bold flex items-center gap-1.5">
+                  <Zap className="w-4 h-4 animate-pulse" />
+                  Unsure about solar sizing?
+                </div>
+                <p className="text-sm text-gray-500 font-medium max-w-xl">
+                  Use our interactive Solar Calculator to enter your appliances or kW load and get an exact equipment match.
+                </p>
+              </div>
+              <a
+                href="/calculator"
+                className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-white text-sm font-bold rounded-full flex items-center justify-center gap-2 flex-shrink-0 transition-colors shadow-md hover:shadow-lg"
+              >
+                <span>Launch Calculator</span>
+                <span>→</span>
+              </a>
+            </div>
+
+            <ProductGrid
+              products={filteredProducts}
+              onQuickView={(product) => setSelectedQuickView(product)}
+            />
+          </div>
         </div>
       </div>
 

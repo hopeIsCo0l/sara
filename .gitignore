@@ -25,7 +25,7 @@ dist/
 *.pdf
 *.docx
 Hope_Labs_*.pdf
-Sebrin_Trading_*.docx
+Sara Power_Trading_*.docx
 
 # Proposal Generation Scripts
 create_proposal_docx.py

@@ -5,7 +5,6 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Search, Phone, Menu, X, ArrowRight, Sun, Zap } from 'lucide-react';
 import { COMPANY_SHORT_NAME, PRIMARY_PHONE, WHATSAPP_LINK } from '@/lib/constants';
-import { ThemeToggle, MobileThemeToggle } from '@/components/ThemeToggle';
 
 interface NavbarProps {
   onSearchToggle?: () => void;
@@ -16,58 +15,64 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
 
   const navLinks = [
-    { label: 'EQUIPMENT CATALOG', href: '/catalog' },
-    { label: 'SOLAR CALCULATOR (kW)', href: '/calculator', highlight: true },
-    { label: 'FEATURED PRODUCTS', href: '/#featured' },
-    { label: 'SOLAR SERVICES', href: '/services' },
-    { label: 'ADMIN DESK', href: '/admin' },
+    { label: 'Equipment Catalog', href: '/catalog' },
+    { label: 'Solar Calculator', href: '/calculator', highlight: true },
+    { label: 'Featured Products', href: '/#featured' },
+    { label: 'Solar Services', href: '/services' },
+    { label: 'Admin Desk', href: '/admin' },
   ];
 
   return (
-    <header className="sticky top-0 z-40 w-full border-b border-kith-border bg-kith-bg/90 backdrop-blur-md transition-all">
-      {/* Top Banner */}
-      <div className="bg-kith-subBg border-b border-kith-border px-4 py-1.5 text-center text-[10px] uppercase tracking-superwide font-mono text-kith-muted flex items-center justify-between">
-        <span className="hidden sm:inline text-kith-darkMuted flex items-center gap-1">
-          <Sun className="w-3 h-3 text-amber-500 inline" /> SOLAR ENERGY
+    <header className="sticky top-0 z-40 w-full bg-kith-bg/80 backdrop-blur-md shadow-[0_4px_30px_rgba(6,182,212,0.1)] transition-all border-b border-cyan-500/20">
+      {/* Top Telemetry Banner */}
+      <div className="bg-cyan-950/40 text-cyan-400 px-4 py-1.5 text-[10px] sm:text-xs tracking-superwide font-mono flex items-center justify-between border-b border-cyan-500/10">
+        <span className="hidden sm:flex items-center gap-2">
+          <Sun className="w-3 h-3 inline text-amber-400" /> SYSTEM ONLINE // GRID STABLE
         </span>
-        <span className="w-full sm:w-auto flex items-center justify-center gap-2">
-          <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-          SEBRIN TRADING PLC — SHOWCASE CATALOG & TECHNICAL SPECIFICATIONS
+        <span className="w-full sm:w-auto flex items-center justify-center gap-2 font-bold text-emerald-400 text-glow-emerald">
+          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-pulse shadow-[0_0_8px_#10b981]"></span>
+          SARA POWER TELEMETRY ACTIVE
         </span>
-        <span className="hidden sm:inline text-kith-darkMuted">ADDIS ABABA, ETHIOPIA</span>
+        <span className="hidden sm:inline text-kith-muted">ADDIS ABABA, ETHIOPIA</span>
       </div>
 
       {/* Main Navbar */}
-      <div className="max-w-[1700px] mx-auto px-4 sm:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-[1700px] mx-auto px-4 sm:px-8 h-20 flex items-center justify-between">
         {/* Left: Brand Logo */}
         <div className="flex items-center gap-8">
-          <Link href="/" className="flex items-baseline gap-2 group">
-            <span className="text-xl sm:text-2xl font-extrabold tracking-kith text-kith-bone uppercase transition-colors">
-              {COMPANY_SHORT_NAME}<span className="text-kith-muted font-light"> // </span>SHOWCASE
-            </span>
+          <Link href="/" className="flex items-center gap-3 group relative">
+            <div className="absolute inset-0 -m-1 rounded-full bg-cyan-500/10 blur-md opacity-0 group-hover:opacity-100 transition-opacity"></div>
+            <div className="relative w-10 h-10 border border-cyan-500/40 bg-black p-1 flex items-center justify-center rounded-sm">
+              <img src="/logo.png" alt="Sara Power Solution" className="h-full w-full object-contain filter invert" />
+            </div>
+            <div className="flex flex-col hidden sm:flex">
+              <span className="text-xl sm:text-2xl font-black tracking-widest text-kith-bone group-hover:text-cyan-400 text-glow-cyan transition-colors font-mono uppercase">
+                Sara Power
+              </span>
+              <span className="text-[9px] font-mono tracking-superwide text-emerald-400 uppercase font-bold text-glow-emerald">
+                Energy Systems
+              </span>
+            </div>
           </Link>
 
           {/* Desktop Links */}
-          <nav className="hidden md:flex items-center gap-6 ml-6">
+          <nav className="hidden md:flex items-center gap-1 ml-6">
             {navLinks.map((link) => {
               const isActive = pathname === link.href;
               return (
                 <Link
                   key={link.href}
                   href={link.href}
-                  className={`text-xs font-mono uppercase tracking-widest transition-colors py-1 relative flex items-center gap-1.5 ${
+                  className={`px-4 py-2 text-xs font-mono font-bold tracking-widest uppercase transition-all rounded-sm border border-transparent flex items-center gap-2 ${
                     isActive
-                      ? 'text-kith-bone font-bold'
+                      ? 'text-cyan-400 bg-cyan-500/10 border-cyan-500/30 shadow-[0_0_10px_rgba(6,182,212,0.1)]'
                       : link.highlight
-                      ? 'text-amber-500 font-semibold hover:text-amber-400'
-                      : 'text-kith-muted hover:text-kith-bone'
+                      ? 'text-emerald-400 hover:text-emerald-300 hover:bg-emerald-500/10 hover:border-emerald-500/30'
+                      : 'text-kith-muted hover:text-cyan-400 hover:bg-cyan-500/5 hover:border-cyan-500/20'
                   }`}
                 >
-                  {link.highlight && <Zap className="w-3 h-3 text-amber-500 animate-pulse" />}
+                  {link.highlight && <Zap className="w-3.5 h-3.5 animate-pulse" />}
                   <span>{link.label}</span>
-                  {isActive && (
-                    <span className="absolute bottom-0 left-0 w-full h-[1.5px] bg-kith-bone"></span>
-                  )}
                 </Link>
               );
             })}
@@ -75,64 +80,61 @@ export const Navbar: React.FC<NavbarProps> = ({ onSearchToggle }) => {
         </div>
 
         {/* Right Actions */}
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-4">
           {onSearchToggle && (
             <button
               onClick={onSearchToggle}
-              className="p-2 text-kith-muted hover:text-kith-bone transition-colors"
-              title="Search Catalog"
+              className="p-2 text-cyan-500/70 hover:text-cyan-400 hover:bg-cyan-500/10 border border-transparent hover:border-cyan-500/30 rounded-sm transition-colors"
+              title="Search Database"
             >
-              <Search className="w-4 h-4" />
+              <Search className="w-5 h-5" />
             </button>
           )}
-
-          <ThemeToggle />
 
           <a
             href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="hidden sm:flex items-center gap-2 px-3.5 py-1.5 border border-kith-border hover:border-kith-bone bg-kith-card text-kith-bone text-xs font-mono tracking-widest uppercase transition-all duration-200 group rounded-none"
+            className="hidden sm:flex items-center gap-2 px-5 py-2 text-xs font-mono font-bold tracking-widest uppercase text-cyan-400 bg-cyan-500/10 border border-cyan-500/50 hover:bg-cyan-500/20 hover:shadow-[0_0_15px_rgba(6,182,212,0.3)] transition-all duration-200 group rounded-sm"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-500 transition-colors" />
+            <Phone className="w-3.5 h-3.5" />
             <span>{PRIMARY_PHONE}</span>
-            <ArrowRight className="w-3 h-3 opacity-60 group-hover:opacity-100 group-hover:translate-x-0.5 transition-transform" />
+            <ArrowRight className="w-3.5 h-3.5 group-hover:translate-x-1 transition-transform" />
           </a>
 
           {/* Mobile Menu Toggle */}
           <button
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-            className="md:hidden p-2 text-kith-bone"
+            className="md:hidden p-2 text-cyan-500 hover:text-cyan-400"
           >
-            {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
+            {isMobileMenuOpen ? <X className="w-6 h-6" /> : <Menu className="w-6 h-6" />}
           </button>
         </div>
       </div>
 
       {/* Mobile Drawer Menu */}
       {isMobileMenuOpen && (
-        <div className="md:hidden border-b border-kith-border bg-kith-card p-6 flex flex-col gap-4 animate-in slide-in-from-top-4 duration-200">
+        <div className="md:hidden border-t border-cyan-500/30 bg-kith-bg/95 backdrop-blur-xl p-6 flex flex-col gap-2 shadow-2xl absolute w-full left-0 animate-in slide-in-from-top-2 duration-200">
           {navLinks.map((link) => (
             <Link
               key={link.href}
               href={link.href}
               onClick={() => setIsMobileMenuOpen(false)}
-              className="text-sm font-mono uppercase tracking-widest text-kith-bone py-2 border-b border-kith-border/50"
+              className="text-xs font-mono font-bold tracking-widest uppercase py-3.5 px-4 border border-transparent hover:bg-cyan-500/10 hover:border-cyan-500/30 text-kith-bone hover:text-cyan-400 transition-all flex items-center gap-2 rounded-sm"
             >
+              {link.highlight && <Zap className="w-4 h-4 text-emerald-400" />}
               {link.label}
             </Link>
           ))}
-
-          <MobileThemeToggle />
 
           <a
             href={WHATSAPP_LINK}
             target="_blank"
             rel="noopener noreferrer"
-            className="mt-2 flex items-center justify-center gap-2 w-full py-3 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono uppercase tracking-widest font-bold transition-colors"
+            className="mt-4 flex items-center justify-center gap-2 w-full py-3 bg-cyan-500/20 border border-cyan-500/50 text-cyan-400 text-xs font-mono font-bold tracking-widest uppercase shadow-[0_0_15px_rgba(6,182,212,0.2)] transition-all rounded-sm"
           >
-            <Phone className="w-4 h-4 text-emerald-500" />
-            WhatsApp: {PRIMARY_PHONE}
+            <Phone className="w-4 h-4" />
+            SYS COMMS: {PRIMARY_PHONE}
           </a>
         </div>
       )}

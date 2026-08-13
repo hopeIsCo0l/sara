@@ -1,4 +1,4 @@
-# Sebrin Trading PLC — Solar Energy Showcase
+# ⚡ Sara Power Solution plc — Solar Energy Showcase
 
 > **High-Performance Equipment Showcase & Telegram Bot Admin Panel**  
 > *Addis Ababa, Ethiopia*
@@ -13,7 +13,7 @@
 
 ## Overview
 
-**Sebrin Trading PLC Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sebrin Trading PLC** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, and deep cycle energy storage with full technical specifications and direct WhatsApp inquiry integration.
+**Sara Power Solution plc Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sara Power Solution plc** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, and deep cycle energy storage with full technical specifications and direct WhatsApp inquiry integration.
 
 ---
 
@@ -21,10 +21,10 @@
 
 - **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
 
-- **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
-- **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sebrin Trading's sales desk (`+251 95 483 4159`).
-- **Telegram Admin Bot Panel**: Async Python Telegram Bot ([@sebrtradebot](https://t.me/sebrtradebot)) powered by `aiogram 3` and `FastAPI` for updating stock levels, uploading photos to Supabase Storage, and managing catalog items.
-- **Dynamic Filter & Sort Matrix**: Category selection, search query matching, stock availability filters, and range sliders in Ethiopian Birr (`ETB`).
+- 🌓 **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
+- 💬 **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sara Power Solution's sales desk (`+251 95 483 4159`).
+- 🤖 **Telegram Admin Bot Panel**: Async Python Telegram Bot ([@sebrtradebot](https://t.me/sebrtradebot)) powered by `aiogram 3` and `FastAPI` for updating stock levels, uploading photos to Supabase Storage, and managing catalog items.
+- 📊 **Dynamic Filter & Sort Matrix**: Category selection, search query matching, stock availability filters, and range sliders in Ethiopian Birr (`ETB`).
 
 ---
 
@@ -32,7 +32,7 @@
 
 | Detail | Information |
 | :--- | :--- |
-| **Legal Company Name** | **Sebrin Trading PLC** |
+| **Legal Company Name** | **Sara Power Solution plc** |
 | **Physical Address** | Addis Ababa, Bole Road, Dhabi Building, 4th Floor, Office 422 |
 | **WhatsApp / Phone** | `+251 95 483 4159` |
 | **Primary Email** | `mube@gmail.com` \| `mube123@gmail.com` |
@@ -118,4 +118,4 @@ Backend API will run on [http://localhost:8000](http://localhost:8000).
 
 ## License
 
-Distributed under the MIT License. Copyright © 2026 **Sebrin Trading PLC**. All rights reserved.
+Distributed under the MIT License. Copyright © 2026 **Sara Power Solution plc**. All rights reserved.

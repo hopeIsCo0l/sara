@@ -1,5 +1,5 @@
 -- ==============================================================================
--- Sebrin Trading PLC — Complete PostgreSQL Database Schema
+-- Sara Power Solution plc — Complete PostgreSQL Database Schema
 -- Supabase Schema for Products, Categories, Services, Images & Solar Attributes
 -- ==============================================================================
 

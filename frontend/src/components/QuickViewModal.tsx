@@ -78,8 +78,9 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
                 {product.name}
               </h2>
               <div className="pt-1 flex items-center gap-3">
-                <span className="text-xl font-mono font-extrabold text-kith-bone">
-                  {product.price.toLocaleString()} {product.currency || 'ETB'}
+                <span className="text-sm font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+                  <Phone className="w-4 h-4 text-emerald-500" />
+                  Inquire for Pricing
                 </span>
                 <span className="px-2 py-0.5 text-[9px] font-mono tracking-widest uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
                   {product.stock_status.replace('_', ' ')}
@@ -114,7 +115,7 @@ export const QuickViewModal: React.FC<QuickViewModalProps> = ({ product, onClose
           {/* Action CTAs */}
           <div className="space-y-3 border-t border-kith-border pt-6">
             <a
-              href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sebrin Trading PLC, I am interested in technical specs and availability for ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
+              href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sara Power Solution plc, I am interested in technical specs and availability for ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-3.5 px-4 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono tracking-widest uppercase font-bold flex items-center justify-center gap-2 transition-colors shadow-lg"

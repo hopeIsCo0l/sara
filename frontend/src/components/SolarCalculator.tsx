@@ -37,7 +37,6 @@ import {
   ApplianceItem,
   CustomAppliance,
   calculateSolarSizing,
-  getMatchedSolarPackages,
   buildWhatsAppSizingMessage,
 } from '@/lib/solarCalculator';
 import { WHATSAPP_NUMBER, PRIMARY_PHONE, TELEGRAM_LINK } from '@/lib/constants';
@@ -198,13 +197,13 @@ export const SolarCalculator: React.FC<SolarCalculatorProps> = ({
 
   // Copy sizing summary
   const handleCopySummary = () => {
-    const text = `SEBRIN TRADING SOLAR SIZING SUMMARY:
+    const text = `Sara Power Solution SOLAR SIZING SUMMARY:
 Peak Continuous Load: ${calculation.totalPeakKW} kW (${calculation.totalPeakWatts} W)
 Daily Energy Consumption: ${calculation.dailyEnergyKWh} kWh/day
 Recommended Inverter: ${calculation.recommendedInverterKW} kW (${calculation.recommendedInverterKVA} kVA)
 Recommended Battery Storage: ${calculation.recommendedBatteryKWh} kWh LiFePO4
 Recommended Solar PV Array: ${calculation.recommendedPanelCount550W}x 550W Panels (${calculation.recommendedSolarArrayWp} Wp)
-Recommended Package: ${activePackage?.name || 'Custom Setup'} (~${(activePackage?.price || 0).toLocaleString()} ETB)
+Recommended Package: ${activePackage?.name || 'Custom Setup'}
 Inquiries: +251 95 483 4159 (WhatsApp)`;
 
     navigator.clipboard.writeText(text);
@@ -741,12 +740,6 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                 ESTIMATED FUEL & GRID SAVINGS
               </div>
               <div className="flex items-center justify-between">
-                <span className="text-kith-muted">Monthly Generator Fuel Saved:</span>
-                <span className="font-bold text-emerald-400">
-                  ~{calculation.monthlyDieselGenSavingsETB.toLocaleString()} ETB / Month
-                </span>
-              </div>
-              <div className="flex items-center justify-between">
                 <span className="text-kith-muted">Annual Clean CO₂ Reduction:</span>
                 <span className="font-bold text-kith-bone">
                   {calculation.annualCO2ReductionKg.toLocaleString()} kg / Year
@@ -847,15 +840,12 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
                     </h4>
                   </div>
 
-                  {/* Price Tag */}
+                  {/* Action CTA */}
                   <div className="pt-2 pb-3 border-y border-kith-border">
-                    <span className="text-[10px] font-mono text-kith-muted uppercase block">
-                      Estimated System Investment:
+                    <span className="text-sm font-bold text-amber-500 uppercase flex items-center gap-2">
+                      <Phone className="w-4 h-4" />
+                      Inquire for Custom Quote
                     </span>
-                    <div className="text-2xl font-black font-mono text-kith-bone">
-                      ~{pkg.price.toLocaleString()}{' '}
-                      <span className="text-xs font-bold text-amber-500">ETB</span>
-                    </div>
                   </div>
 
                   {/* Component Breakdown */}
@@ -936,7 +926,7 @@ Inquiries: +251 95 483 4159 (WhatsApp)`;
             <strong className="text-kith-bone">Inverter Surge Capacity:</strong> Continuous loads are multiplied by a 1.25× engineering safety margin to absorb motor starting inrush currents (water pumps, fridge compressors).
           </div>
           <div>
-            <strong className="text-kith-bone">Custom Engineering:</strong> Need three-phase 380V power or industrial grid-tied solar? Contact Sebrin Trading engineering directly at <b className="text-kith-bone">{PRIMARY_PHONE}</b>.
+            <strong className="text-kith-bone">Custom Engineering:</strong> Need three-phase 380V power or industrial grid-tied solar? Contact Sara Power Solution engineering directly at <b className="text-kith-bone">{PRIMARY_PHONE}</b>.
           </div>
         </div>
       </div>

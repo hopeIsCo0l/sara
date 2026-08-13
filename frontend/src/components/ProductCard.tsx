@@ -3,7 +3,7 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
 import Image from 'next/image';
-import { Eye, Phone } from 'lucide-react';
+import { Eye, Phone, ArrowRight, Terminal } from 'lucide-react';
 import { Product } from '@/lib/types';
 import { WHATSAPP_LINK } from '@/lib/constants';
 
@@ -19,39 +19,48 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   const secondaryImage = product.images.find((img) => !img.is_primary)?.url || primaryImage;
 
   const stockBadgeStyles = {
-    in_stock: 'bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border-emerald-500/30',
-    low_stock: 'bg-amber-500/10 text-amber-600 dark:text-amber-300 border-amber-500/30',
-    preorder: 'bg-indigo-500/10 text-indigo-600 dark:text-indigo-300 border-indigo-500/30',
-    sold_out: 'bg-rose-500/10 text-rose-600 dark:text-rose-300 border-rose-500/30',
+    in_stock: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]',
+    low_stock: 'border-amber-500/30 text-amber-400 bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)]',
+    preorder: 'border-purple-500/30 text-purple-400 bg-purple-500/10 shadow-[0_0_10px_rgba(168,85,247,0.2)]',
+    sold_out: 'border-red-500/30 text-red-400 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.2)]',
   };
 
   const stockLabels = {
-    in_stock: 'IN STOCK',
-    low_stock: 'LIMITED STOCK',
-    preorder: 'PRE-ORDER',
-    sold_out: 'SOLD OUT',
+    in_stock: 'SYS_READY',
+    low_stock: 'LOW_RES',
+    preorder: 'PRE_SYNC',
+    sold_out: 'DEPLETED',
   };
 
   return (
     <div
-      className="group relative flex flex-col bg-kith-card border border-kith-border overflow-hidden transition-all duration-300 hover:border-kith-bone/50 shadow-sm"
+      className="group relative flex flex-col tech-panel overflow-hidden"
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
+      {/* Scanline overlay on hover */}
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 mix-blend-overlay"></div>
+
       {/* Image Display */}
-      <div className="relative aspect-[3/4] w-full bg-kith-subBg overflow-hidden">
+      <div className="relative aspect-[4/3] w-full bg-black overflow-hidden border-b border-cyan-500/20 p-4">
+        {/* Corner Brackets */}
+        <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-cyan-500/50 z-10"></div>
+        <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-cyan-500/50 z-10"></div>
+        <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-cyan-500/50 z-10"></div>
+        <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-cyan-500/50 z-10"></div>
+
         <Image
           src={isHovered ? secondaryImage : primaryImage}
           alt={product.name}
           fill
           sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
-          className="object-cover object-center transition-transform duration-500 group-hover:scale-105"
+          className="object-contain p-8 filter transition-all duration-700 group-hover:scale-105 group-hover:brightness-110"
         />
 
         {/* Stock Status Overlay Badge */}
-        <div className="absolute top-3 left-3 z-10">
+        <div className="absolute top-4 left-4 z-10">
           <span
-            className={`px-2 py-0.5 text-[9px] font-mono tracking-widest uppercase border backdrop-blur-md ${
+            className={`px-2 py-1 text-[9px] font-mono font-bold tracking-widest uppercase border ${
               stockBadgeStyles[product.stock_status] || stockBadgeStyles.in_stock
             }`}
           >
@@ -59,47 +68,38 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
           </span>
         </div>
 
-        {/* SKU tag */}
-        {product.sku && (
-          <div className="absolute top-3 right-3 z-10 hidden sm:block">
-            <span className="px-1.5 py-0.5 text-[9px] font-mono tracking-wider uppercase bg-kith-card/90 text-kith-muted border border-kith-border backdrop-blur-md">
-              {product.sku}
-            </span>
-          </div>
-        )}
-
         {/* Hover Quick View Overlay Action */}
-        <div className="absolute inset-0 bg-kith-overlayBg backdrop-blur-[2px] opacity-0 group-hover:opacity-100 transition-opacity duration-200 flex items-center justify-center gap-2 p-4">
+        <div className="absolute inset-0 bg-kith-bg/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 p-4 z-10">
           {onQuickView && (
             <button
               onClick={() => onQuickView(product)}
-              className="flex-1 py-2.5 px-3 bg-kith-btnSecondaryBg text-kith-btnSecondaryText border border-kith-btnSecondaryBorder hover:bg-kith-btnSecondaryHover text-xs font-mono tracking-widest uppercase font-bold flex items-center justify-center gap-1.5 transition-colors shadow-md"
+              className="flex-1 py-2 px-4 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500/40 text-[10px] font-mono font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
             >
               <Eye className="w-3.5 h-3.5" />
-              QUICK VIEW
+              QUERY_DATA
             </button>
           )}
 
           <a
-            href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sebrin Trading PLC, I am interested in viewing specs for ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
+            href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`[SECURE_COMMS] Requesting specs for HW_UNIT: ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2.5 bg-kith-btnSecondaryBg text-kith-btnSecondaryText border border-kith-btnSecondaryBorder hover:bg-kith-btnSecondaryHover transition-colors shadow-md"
-            title="Contact via WhatsApp"
+            className="p-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/40 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            title="Contact via COMMS"
           >
-            <Phone className="w-3.5 h-3.5 text-emerald-500" />
+            <Phone className="w-4 h-4" />
           </a>
         </div>
       </div>
 
       {/* Product Details Section */}
-      <div className="p-4 flex flex-col justify-between flex-1 border-t border-kith-border bg-kith-card">
+      <div className="p-5 flex flex-col justify-between flex-1 bg-kith-subBg/40 relative z-10">
         <div>
           {/* Category & Details */}
-          <div className="flex items-center justify-between text-[10px] font-mono tracking-widest text-kith-muted uppercase mb-1">
-            <span>{product.category?.name || 'CAPSULE'}</span>
+          <div className="flex items-center justify-between text-[9px] font-mono font-bold tracking-superwide text-cyan-500/70 uppercase mb-3">
+            <span className="flex items-center gap-1.5"><Terminal className="w-3 h-3" /> {product.category?.name || 'CLASS_UNDEF'}</span>
             {product.details?.material && (
-              <span className="truncate max-w-[120px] text-kith-darkMuted">
+              <span className="truncate max-w-[120px] text-emerald-500/70">
                 {product.details.material}
               </span>
             )}
@@ -107,23 +107,23 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
 
           {/* Title */}
           <Link href={`/catalog/${product.slug}`}>
-            <h3 className="text-xs sm:text-sm font-semibold tracking-wide text-kith-bone uppercase line-clamp-1 group-hover:text-kith-accent transition-colors">
+            <h3 className="text-sm font-black font-mono tracking-widest text-kith-bone line-clamp-2 group-hover:text-cyan-400 transition-colors uppercase">
               {product.name}
             </h3>
           </Link>
         </div>
 
-        {/* Price & Action Link */}
-        <div className="mt-3 pt-2.5 border-t border-kith-border/60 flex items-center justify-between">
-          <span className="text-xs sm:text-sm font-mono font-bold tracking-wider text-kith-bone">
-            {product.price.toLocaleString()} <span className="text-[10px] font-normal text-kith-muted">{product.currency || 'ETB'}</span>
+        <div className="mt-4 pt-4 border-t border-cyan-500/20 flex items-center justify-between">
+          <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-superwide flex items-center gap-1.5 text-glow-emerald">
+            <Phone className="w-3 h-3 text-emerald-400" />
+            REQUEST_ESTIMATE
           </span>
 
           <Link
             href={`/catalog/${product.slug}`}
-            className="text-[10px] font-mono tracking-widest uppercase text-kith-muted hover:text-kith-bone flex items-center gap-1 group/link"
+            className="w-7 h-7 bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500/30 group-hover:shadow-[0_0_10px_rgba(6,182,212,0.4)] transition-all"
           >
-            SPECS <span className="group-hover/link:translate-x-0.5 transition-transform">→</span>
+            <ArrowRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
