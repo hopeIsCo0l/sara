@@ -1,6 +1,6 @@
 services:
   - type: web
-    name: sebrin-trading-backend
+    name: Sara Power-trading-backend
     env: python
     region: singapore
     rootDir: backend

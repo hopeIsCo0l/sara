@@ -1,8 +1,8 @@
-export const COMPANY_NAME = 'Sebrin Trading PLC';
-export const COMPANY_SHORT_NAME = 'SEBRIN TRADING';
+export const COMPANY_NAME = 'Sara Power Solution plc';
+export const COMPANY_SHORT_NAME = 'Sara Power Solution';
 export const BRAND_TAGLINE = 'Empowering Energy Excellence — Premium Solar Power Systems & Solutions';
 export const HERO_HEADER = 'ADVANCED SOLAR ENERGY EQUIPMENT';
-export const SHORT_ABOUT_US = 'Sebrin Trading PLC is a premier supplier based in Addis Ababa, Ethiopia, specializing in high-efficiency solar panels, hybrid inverters, and deep-cycle solar batteries.';
+export const SHORT_ABOUT_US = 'Sara Power Solution plc is a premier supplier based in Addis Ababa, Ethiopia, specializing in high-efficiency solar panels, hybrid inverters, and deep-cycle solar batteries.';
 
 export const PRIMARY_EMAIL = 'mube@gmail.com';
 export const SECONDARY_EMAIL = 'mube123@gmail.com';

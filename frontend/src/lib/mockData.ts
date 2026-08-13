@@ -18,7 +18,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: 'Tier-1 ultra-high efficiency N-type TOPCon monocrystalline solar module. Built with anti-reflective tempered glass, corrosion-resistant anodized aluminum frame, and 22.5% module conversion efficiency for harsh climatic conditions.',
     details: {
-      brand: 'Jinko Solar / Sebrin Certified',
+      brand: 'Jinko Solar / Sara Power Certified',
       power_output: '550 Watts Peak (STC)',
       voltage: '41.95V (Vmp) / 50.10V (Voc)',
       dimensions: '2278 x 1134 x 35 mm',
@@ -92,7 +92,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: 'Wall-mounted 5.12kWh Lithium Iron Phosphate (LiFePO4) solar energy storage pack. Built-in smart BMS protection, over 6,000 deep discharge cycles at 80% DOD, and parallel scalability up to 15 units.',
     details: {
-      brand: 'Felicity Solar / Sebrin Storage',
+      brand: 'Felicity Solar / Sara Power Storage',
       capacity: '100Ah / 5.12 kWh Usable Energy',
       voltage: '51.2V Nominal (44.8V - 57.6V Range)',
       weight: '48 kg',
@@ -117,14 +117,14 @@ export const MOCK_PRODUCTS: Product[] = [
     id: 'prod-4',
     category_id: 'cat-3',
     category: MOCK_CATEGORIES[2],
-    name: 'Sebrin Power 200Ah 12V Maintenance-Free Gel Deep Cycle Battery',
-    slug: 'sebrin-power-200ah-12v-maintenance-free-gel-deep-cycle-battery',
+    name: 'Sara Power Power 200Ah 12V Maintenance-Free Gel Deep Cycle Battery',
+    slug: 'Sara Power-power-200ah-12v-maintenance-free-gel-deep-cycle-battery',
     sku: 'SEB-BAT-200GEL',
     price: 38000,
     currency: 'ETB',
     description: 'Heavy-duty 12V 200Ah valve-regulated sealed lead-gel battery for solar backup and UPS systems. Features thick lead-calcium grid alloy plates for deep discharge recovery and long standby service life.',
     details: {
-      brand: 'Sebrin Power Tech',
+      brand: 'Sara Power Power Tech',
       capacity: '200Ah @ 10-Hour Rate',
       voltage: '12V Nominal',
       dimensions: '522 x 240 x 219 mm',
@@ -157,7 +157,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: 'Advanced Maximum Power Point Tracking (MPPT) solar charge controller with 98% tracking efficiency. Backlit LCD screen displays charging current, PV voltage, and battery temperature compensation status.',
     details: {
-      brand: 'Sebrin Solar Tech',
+      brand: 'Sara Power Solar Tech',
       voltage: '12V / 24V / 36V / 48V Auto Recognition',
       power_output: '60A Max Charging Current (PV Input up to 150V)',
       warranty: '2-Year Replacement Warranty',
@@ -188,7 +188,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: 'Essential daytime & evening backup with automatic power transfer. Ideal for small homes and vital appliances.',
     details: {
-      brand: 'Sebrin Kits',
+      brand: 'Sara Power Kits',
     },
     is_featured: true,
     is_visible: true,
@@ -217,7 +217,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: '24/7 uninterrupted power for standard villas. Includes high-efficiency Tier-1 TOPCon solar panels and LiFePO4 battery.',
     details: {
-      brand: 'Sebrin Kits',
+      brand: 'Sara Power Kits',
     },
     is_featured: true,
     is_visible: true,
@@ -246,7 +246,7 @@ export const MOCK_PRODUCTS: Product[] = [
     currency: 'ETB',
     description: 'Extended multi-day rainy weather autonomy. High surge capacity for AC & commercial pumps.',
     details: {
-      brand: 'Sebrin Kits',
+      brand: 'Sara Power Kits',
     },
     is_featured: true,
     is_visible: true,
@@ -272,7 +272,7 @@ export const MOCK_SERVICES: Service[] = [
     title: 'Turnkey Solar Power System Sizing & Installation',
     slug: 'turnkey-solar-power-system-sizing-installation',
     subtitle: 'Commercial, industrial & residential solar design from roof assessment to inverter commissioning.',
-    description: 'Sebrin Trading PLC provides full technical assessment, load calculation, solar array mounting, high-capacity inverter configuration, and lithium battery storage installation for uninterrupted power supply across Ethiopia.',
+    description: 'Sara Power Solution plc provides full technical assessment, load calculation, solar array mounting, high-capacity inverter configuration, and lithium battery storage installation for uninterrupted power supply across Ethiopia.',
     specifications: [
       'Site Load & Solar Irradiance Analysis',
       'Tier-1 Monocrystalline Panel Mounting & Cable Management',

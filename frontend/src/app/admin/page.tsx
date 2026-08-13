@@ -88,7 +88,7 @@ export default function AdminPage() {
   const [uploadingImage, setUploadingImage] = useState(false);
 
   // Tech Specs Fields
-  const [specBrand, setSpecBrand] = useState('Sebrin Certified');
+  const [specBrand, setSpecBrand] = useState('Sara Power Certified');
   const [specPower, setSpecPower] = useState('');
   const [specVoltage, setSpecVoltage] = useState('');
   const [specWarranty, setSpecWarranty] = useState('2-Year Warranty');
@@ -113,7 +113,7 @@ export default function AdminPage() {
 
   // Check Session Auth on Mount
   useEffect(() => {
-    const savedAuth = sessionStorage.getItem('sebrin_admin_auth');
+    const savedAuth = sessionStorage.getItem('Sara Power_admin_auth');
     if (savedAuth === 'true') {
       setIsAuthenticated(true);
     }
@@ -151,9 +151,9 @@ export default function AdminPage() {
   // Auth Handler
   const handleLogin = (e: React.FormEvent) => {
     e.preventDefault();
-    if (passcode === 'sebrin2026' || passcode === 'admin') {
+    if (passcode === 'Sara Power2026' || passcode === 'admin') {
       setIsAuthenticated(true);
-      sessionStorage.setItem('sebrin_admin_auth', 'true');
+      sessionStorage.setItem('Sara Power_admin_auth', 'true');
       setAuthError(false);
     } else {
       setAuthError(true);
@@ -162,7 +162,7 @@ export default function AdminPage() {
 
   const handleLogout = () => {
     setIsAuthenticated(false);
-    sessionStorage.removeItem('sebrin_admin_auth');
+    sessionStorage.removeItem('Sara Power_admin_auth');
   };
 
   // -------------------------------------------------------------
@@ -179,7 +179,7 @@ export default function AdminPage() {
     setProdIsFeatured(true);
     setProdImageUrls([]);
     setManualUrlInput('');
-    setSpecBrand('Sebrin Certified');
+    setSpecBrand('Sara Power Certified');
     setSpecPower('');
     setSpecVoltage('');
     setSpecWarranty('2-Year Warranty');
@@ -198,7 +198,7 @@ export default function AdminPage() {
     const existingImages = product.images?.map((img) => img.url) || [];
     setProdImageUrls(existingImages);
     setManualUrlInput('');
-    setSpecBrand(product.details?.brand || 'Sebrin Certified');
+    setSpecBrand(product.details?.brand || 'Sara Power Certified');
     setSpecPower(product.details?.power_output || '');
     setSpecVoltage(product.details?.voltage || '');
     setSpecWarranty(product.details?.warranty || '2-Year Warranty');
@@ -284,7 +284,7 @@ export default function AdminPage() {
           sku: prodSku || `SEB-${Math.floor(1000 + Math.random() * 9000)}`,
           price: Number(prodPrice),
           currency: 'ETB',
-          description: prodDescription || `${prodName} supplied by Sebrin Trading PLC.`,
+          description: prodDescription || `${prodName} supplied by Sara Power Solution plc.`,
           details: detailsObj,
           is_featured: prodIsFeatured,
           is_visible: true,
@@ -303,7 +303,7 @@ export default function AdminPage() {
         currency: 'ETB',
         category_id: selectedCat?.id,
         category: selectedCat,
-        description: prodDescription || `${prodName} supplied by Sebrin Trading PLC.`,
+        description: prodDescription || `${prodName} supplied by Sara Power Solution plc.`,
         details: detailsObj,
         is_featured: prodIsFeatured,
         is_visible: true,
@@ -604,7 +604,7 @@ export default function AdminPage() {
                 type="password"
                 value={passcode}
                 onChange={(e) => setPasscode(e.target.value)}
-                placeholder="Passcode (Default: sebrin2026)"
+                placeholder="Passcode (Default: Sara Power2026)"
                 className="w-full bg-kith-subBg border border-kith-border px-4 py-3 text-xs font-mono text-kith-bone focus:outline-none focus:border-kith-bone transition-colors"
                 autoFocus
               />
@@ -613,7 +613,7 @@ export default function AdminPage() {
             {authError && (
               <div className="p-3 bg-rose-500/10 border border-rose-500/30 text-rose-500 text-xs font-mono flex items-center gap-2">
                 <AlertTriangle className="w-4 h-4 flex-shrink-0" />
-                Invalid passcode. Try "sebrin2026".
+                Invalid passcode. Try "Sara Power2026".
               </div>
             )}
 
@@ -644,7 +644,7 @@ export default function AdminPage() {
         <div>
           <div className="flex items-center gap-2 text-[10px] font-mono tracking-superwide text-kith-muted uppercase mb-1">
             <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-            SEBRIN TRADING PLC // LIVE CATALOG MANAGEMENT & CRUD OPERATIONS
+            Sara Power Solution plc // LIVE CATALOG MANAGEMENT & CRUD OPERATIONS
           </div>
           <h1 className="text-2xl sm:text-4xl font-extrabold tracking-tight uppercase text-kith-bone flex items-center gap-3">
             EQUIPMENT ADMIN DASHBOARD
@@ -797,7 +797,6 @@ export default function AdminPage() {
               <tr>
                 <th className="py-3.5 px-4">ITEM & PHOTOS</th>
                 <th className="py-3.5 px-4">CATEGORY</th>
-                <th className="py-3.5 px-4">PRICE (ETB)</th>
                 <th className="py-3.5 px-4">STOCK STATUS</th>
                 <th className="py-3.5 px-4">FEATURED</th>
                 <th className="py-3.5 px-4 text-right">CRUD ACTIONS</th>
@@ -845,10 +844,6 @@ export default function AdminPage() {
 
                       <td className="py-3 px-4 text-kith-muted uppercase">
                         {p.category?.name || 'UNASSIGNED'}
-                      </td>
-
-                      <td className="py-3 px-4 font-bold text-kith-bone whitespace-nowrap">
-                        {p.price.toLocaleString()} ETB
                       </td>
 
                       <td className="py-3 px-4">
@@ -1053,8 +1048,8 @@ export default function AdminPage() {
                 />
               </div>
 
-              {/* Category & Price */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+              {/* Category */}
+              <div className="grid grid-cols-1 gap-4">
                 <div className="space-y-1">
                   <label className="text-[10px] uppercase text-kith-muted">CATEGORY *</label>
                   <select
@@ -1068,17 +1063,6 @@ export default function AdminPage() {
                       </option>
                     ))}
                   </select>
-                </div>
-
-                <div className="space-y-1">
-                  <label className="text-[10px] uppercase text-kith-muted">PRICE IN ETB *</label>
-                  <input
-                    type="number"
-                    required
-                    value={prodPrice}
-                    onChange={(e) => setProdPrice(Number(e.target.value))}
-                    className="w-full bg-kith-subBg border border-kith-border px-3 py-2.5 text-kith-bone focus:outline-none focus:border-kith-bone"
-                  />
                 </div>
               </div>
 

@@ -45,7 +45,7 @@ async def lifespan(app: FastAPI):
         polling_task.cancel()
 
 app = FastAPI(
-    title="Sebrin Trading PLC — Solar Equipment API",
+    title="Sara Power Solution plc — Solar Equipment API",
     description="Python Async FastAPI & aiogram 3 Telegram Bot Admin Panel Backend",
     version="1.0.0",
     lifespan=lifespan
@@ -64,7 +64,7 @@ app.add_middleware(
 async def root():
     return {
         "status": "online",
-        "system": "Sebrin Trading PLC Catalog API",
+        "system": "Sara Power Solution plc Catalog API",
         "bot_framework": "aiogram 3 (asyncio)",
         "database": "Supabase PostgreSQL",
         "version": "1.0.0"

@@ -1,6 +1,6 @@
 # Changelog
 
-All notable changes to the **Sebrin Trading PLC Web Platform & Sizing Engine** will be documented in this file.
+All notable changes to the **Sara Power Solution plc Web Platform & Sizing Engine** will be documented in this file.
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/), and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
@@ -36,7 +36,7 @@ The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 
 ### Added
 - **Administrative Portal (`/admin`)**:
-  - Session-based passcode authentication (`sebrin2026`).
+  - Session-based passcode authentication (`Sara Power2026`).
   - Inventory metrics counter bar (Total products, categories, in-stock count, active services).
   - Search and filter by category and SKU.
   - Multi-photo gallery thumbnail previews.

@@ -39,9 +39,7 @@ export interface SolarSystemCalculation {
   recommendedSolarArrayWp: number;
   recommendedPanelCount550W: number;
   
-  // Financial & Fuel Savings Estimation (Ethiopia context)
-  estimatedSystemCostETB: number;
-  monthlyDieselGenSavingsETB: number;
+  // Environmental Savings Estimation
   annualCO2ReductionKg: number;
 }
 
@@ -218,18 +216,6 @@ export function calculateSolarSizing(
   const panelCount550W = Math.max(Math.ceil(requiredArrayWatts / 550), 2);
   const recommendedSolarArrayWp = panelCount550W * 550;
 
-  // Estimated System Cost in ETB (Panels ~18.5k ETB, Inverter ~95k ETB for 5.5kW, Battery ~165k ETB for 5.12kWh)
-  const panelCost = panelCount550W * 18500;
-  const inverterCost = (recommendedInverterKW / 5.5) * 95000;
-  const batteryCost = (recommendedBatteryKWh / 5.12) * 165000;
-  const balanceOfSystemAndInstallation = 25000 + panelCount550W * 1200;
-  const estimatedSystemCostETB = Math.round(panelCost + inverterCost + batteryCost + balanceOfSystemAndInstallation);
-
-  // Monthly Diesel Savings (assuming diesel generator fuel at ~110 ETB/Liter, 0.4L/kWh)
-  const monthlyKWh = dailyEnergyKWh * 30;
-  const litersSavedMonthly = monthlyKWh * 0.35;
-  const monthlyDieselGenSavingsETB = Math.round(litersSavedMonthly * 115);
-
   // Annual CO2 reduction (approx 0.75 kg CO2 / kWh solar vs thermal grid/diesel)
   const annualCO2ReductionKg = Math.round(dailyEnergyKWh * 365 * 0.75);
 
@@ -244,8 +230,6 @@ export function calculateSolarSizing(
     recommendedBatteryAh48V,
     recommendedSolarArrayWp,
     recommendedPanelCount550W: panelCount550W,
-    estimatedSystemCostETB,
-    monthlyDieselGenSavingsETB,
     annualCO2ReductionKg,
   };
 }
@@ -257,7 +241,7 @@ export function buildWhatsAppSizingMessage(
   calc: SolarSystemCalculation,
   selectedPackage?: Product
 ): string {
-  let text = `Hello Sebrin Trading PLC,\n\n`;
+  let text = `Hello Sara Power Solution plc,\n\n`;
   text += `I used your Solar Sizing Calculator (FR-2) on your website with the following requirements:\n\n`;
   text += `⚡ Peak Continuous Load: ${calc.totalPeakKW} kW (${calc.totalPeakWatts} W)\n`;
   text += `🔋 Daily Energy Demand: ${calc.dailyEnergyKWh} kWh/day\n`;
@@ -266,7 +250,7 @@ export function buildWhatsAppSizingMessage(
   text += `☀️ Recommended Solar Array: ${calc.recommendedPanelCount550W}x 550W Panels (${calc.recommendedSolarArrayWp} Wp)\n\n`;
 
   if (selectedPackage) {
-    text += `Interested in Package: *${selectedPackage.name}* (Est. ${selectedPackage.price.toLocaleString()} ETB)\n\n`;
+    text += `Interested in Package: *${selectedPackage.name}*\n\n`;
   }
 
   text += `Please send me a formal quotation and product availability. Thank you!`;

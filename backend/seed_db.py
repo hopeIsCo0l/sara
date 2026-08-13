@@ -4,7 +4,7 @@ import sys
 from db.supabase_client import db
 
 async def seed():
-    print("[Seed] Seeding Supabase database for Sebrin Trading PLC...")
+    print("[Seed] Seeding Supabase database for Sara Power Solution plc...")
     if not db.client:
         print("[Seed] Error: Supabase client is not connected!")
         return
@@ -82,13 +82,13 @@ async def seed():
         },
         {
             "category_id": cat_map.get("solar-batteries-controllers"),
-            "name": "Sebrin Power 200Ah 12V Maintenance-Free Gel Deep Cycle Battery",
-            "slug": "sebrin-power-200ah-12v-maintenance-free-gel-deep-cycle-battery",
+            "name": "Sara Power Power 200Ah 12V Maintenance-Free Gel Deep Cycle Battery",
+            "slug": "Sara Power-power-200ah-12v-maintenance-free-gel-deep-cycle-battery",
             "sku": "SEB-BAT-200GEL",
             "price": 38000,
             "currency": "ETB",
             "description": "Heavy-duty 12V 200Ah valve-regulated sealed lead-gel battery for solar backup and UPS systems.",
-            "details": {"brand": "Sebrin Power Tech", "capacity": "200Ah", "warranty": "2-Year Warranty"},
+            "details": {"brand": "Sara Power Power Tech", "capacity": "200Ah", "warranty": "2-Year Warranty"},
             "is_featured": False,
             "is_visible": True,
             "stock_status": "in_stock",
@@ -117,7 +117,7 @@ async def seed():
             "title": "Turnkey Solar Power System Sizing & Installation",
             "slug": "turnkey-solar-power-system-sizing-installation",
             "subtitle": "Commercial, industrial & residential solar design from roof assessment to inverter commissioning.",
-            "description": "Sebrin Trading PLC provides full technical assessment, load calculation, solar array mounting, high-capacity inverter configuration, and lithium battery storage installation across Ethiopia.",
+            "description": "Sara Power Solution plc provides full technical assessment, load calculation, solar array mounting, high-capacity inverter configuration, and lithium battery storage installation across Ethiopia.",
             "specifications": ["Site Load & Solar Irradiance Analysis", "Tier-1 Panel Mounting", "Inverter & Lithium Battery Commissioning"],
             "price_range": "Custom Quote",
             "display_order": 1

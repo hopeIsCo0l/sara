@@ -109,8 +109,9 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
             </h1>
 
             <div className="flex items-baseline gap-4 pt-2">
-              <span className="text-2xl font-mono font-extrabold text-kith-bone">
-                {product.price.toLocaleString()} <span className="text-xs text-kith-muted">{product.currency || 'ETB'}</span>
+              <span className="text-sm font-bold text-gray-500 uppercase tracking-widest flex items-center gap-1.5">
+                <Phone className="w-4 h-4 text-emerald-500" />
+                Inquire for Current Pricing
               </span>
 
               <span className="px-2.5 py-1 text-[10px] font-mono tracking-widest uppercase bg-emerald-500/10 text-emerald-600 dark:text-emerald-300 border border-emerald-500/30">
@@ -149,7 +150,7 @@ export default function ProductDetailPage({ params }: { params: { slug: string }
           {/* WhatsApp Direct Contact CTA */}
           <div className="space-y-4 border-t border-kith-border pt-6">
             <a
-              href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sebrin Trading PLC, I am inquiring about product specs and availability for ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
+              href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`Hello Sara Power Solution plc, I am inquiring about product specs and availability for ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
               target="_blank"
               rel="noopener noreferrer"
               className="w-full py-4 px-6 bg-kith-btnPrimaryBg text-kith-btnPrimaryText hover:bg-kith-btnPrimaryHover text-xs font-mono tracking-widest uppercase font-bold flex items-center justify-center gap-2 transition-all shadow-xl"

@@ -1,5 +1,5 @@
 {
-  "name": "sebrin-trading-showcase-root",
+  "name": "Sara Power-trading-showcase-root",
   "private": true,
   "scripts": {
     "dev": "cd frontend && npm run dev",
