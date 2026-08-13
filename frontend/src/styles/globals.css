@@ -3,101 +3,86 @@
 @tailwind utilities;
 
 @layer base {
-  :root, html.dark {
-    --kith-bg: #0F0F10;
-    --kith-sub-bg: #0A0A0B;
-    --kith-card: #141416;
-    --kith-inner-card: #1C1C1F;
-    --kith-border: #26262A;
-    --kith-border-light: #38383E;
-    --kith-bone: #F8F8F6;
-    --kith-offwhite: #EAEAEA;
-    --kith-muted: #8E8E93;
-    --kith-dark-muted: #63636A;
-    --kith-accent: #D4AF37;
+  :root {
+    /* SURPRISE: HIGH-TECH DASHBOARD THEME */
+    --kith-bg: #030712; /* Deep space black/gray */
+    --kith-subBg: #0b1120; /* Slightly lighter deep tech blue */
+    --kith-card: rgba(15, 23, 42, 0.6); /* Glassmorphism translucent slate */
+    --kith-border: rgba(30, 58, 138, 0.4); /* Glowy blue border */
+    
+    --kith-bone: #f8fafc; /* Stark bright white for high contrast */
+    --kith-muted: #94a3b8; /* Slate 400 */
+    --kith-darkMuted: #475569; /* Slate 600 */
+    
+    --kith-accent: #06b6d4; /* High-tech Cyan 500 */
+    
+    /* Primary buttons become glowing cyan panels */
+    --kith-btnPrimaryBg: rgba(6, 182, 212, 0.15);
+    --kith-btnPrimaryHover: rgba(6, 182, 212, 0.3);
+    --kith-btnPrimaryText: #22d3ee; /* Cyan 400 */
+  }
+}
 
-    --kith-btn-primary-bg: #F8F8F6;
-    --kith-btn-primary-text: #0F0F10;
-    --kith-btn-primary-hover: #E2E2DD;
-
-    --kith-btn-secondary-bg: #1C1C1F;
-    --kith-btn-secondary-text: #F8F8F6;
-    --kith-btn-secondary-border: #38383E;
-    --kith-btn-secondary-hover: #26262A;
-
-    --kith-overlay-bg: rgba(0, 0, 0, 0.45);
-    color-scheme: dark;
+@layer base {
+  html, body {
+    @apply bg-kith-bg text-kith-bone selection:bg-cyan-500/30 selection:text-cyan-200 antialiased min-h-screen overflow-x-hidden;
+    background-image: 
+      radial-gradient(circle at top right, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
+      radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
+      linear-gradient(rgba(30, 58, 138, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(30, 58, 138, 0.05) 1px, transparent 1px);
+    background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    background-attachment: fixed;
+    /* Adding a tech grid to the background */
   }
 
-  html.light {
-    --kith-bg: #F4F4F1;
-    --kith-sub-bg: #EBEBE6;
-    --kith-card: #FFFFFF;
-    --kith-inner-card: #F0F0EC;
-    --kith-border: #D8D8D2;
-    --kith-border-light: #C4C4BD;
-    --kith-bone: #121214;
-    --kith-offwhite: #28282C;
-    --kith-muted: #5E5E65;
-    --kith-dark-muted: #8C8C94;
-    --kith-accent: #B58D20;
-
-    --kith-btn-primary-bg: #121214;
-    --kith-btn-primary-text: #FFFFFF;
-    --kith-btn-primary-hover: #2A2A2E;
-
-    --kith-btn-secondary-bg: #FFFFFF;
-    --kith-btn-secondary-text: #121214;
-    --kith-btn-secondary-border: #D8D8D2;
-    --kith-btn-secondary-hover: #EBEBE6;
-
-    --kith-overlay-bg: rgba(255, 255, 255, 0.55);
-    color-scheme: light;
-  }
-
-  body {
-    background-color: var(--kith-bg);
-    color: var(--kith-bone);
-    font-family: var(--font-inter), -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
-    overflow-x: hidden;
-    -webkit-font-smoothing: antialiased;
-    transition: background-color 0.25s ease, color 0.25s ease;
-  }
-
-  /* Custom Minimalist Scrollbar */
+  /* Custom Tech Scrollbar */
   ::-webkit-scrollbar {
-    width: 5px;
-    height: 5px;
+    width: 6px;
+    height: 6px;
   }
-
   ::-webkit-scrollbar-track {
     background: var(--kith-bg);
   }
-
   ::-webkit-scrollbar-thumb {
-    background: var(--kith-border);
-    border-radius: 2px;
+    background: rgba(6, 182, 212, 0.3);
   }
-
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--kith-muted);
+    background: var(--kith-accent);
   }
 }
 
 @layer utilities {
-  .border-kith-grid {
-    border-color: var(--kith-border);
+  .tracking-kith {
+    letter-spacing: 0.15em;
+  }
+  
+  .tracking-superwide {
+    letter-spacing: 0.3em;
   }
 
-  .text-kith-title {
-    text-transform: uppercase;
-    letter-spacing: 0.18em;
-    font-weight: 600;
+  /* Glassmorphism Panel */
+  .tech-panel {
+    @apply bg-kith-card backdrop-blur-md border border-kith-border shadow-[0_0_15px_rgba(6,182,212,0.05)] transition-all duration-300;
+  }
+  
+  .tech-panel:hover {
+    @apply border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.15)];
   }
 
-  .glass-panel {
-    background: var(--kith-card);
-    backdrop-filter: blur(12px);
-    -webkit-backdrop-filter: blur(12px);
+  /* Neon Glowing Text */
+  .text-glow-cyan {
+    text-shadow: 0 0 10px rgba(6,182,212,0.5);
+  }
+  
+  .text-glow-emerald {
+    text-shadow: 0 0 10px rgba(16,185,129,0.5);
+  }
+
+  /* Hide arrows on number inputs */
+  input[type="number"]::-webkit-inner-spin-button,
+  input[type="number"]::-webkit-outer-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
   }
 }
