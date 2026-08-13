@@ -11,15 +11,15 @@
 
 ---
 
-## 📖 Overview
+## Overview
 
 **Sara Power Solution plc Showcase** is a modern, high-density showcase platform and admin management ecosystem engineered for **Sara Power Solution plc** based in **Addis Ababa, Ethiopia**. The platform displays commercial solar power systems, hybrid inverters, and deep cycle energy storage with full technical specifications and direct WhatsApp inquiry integration.
 
 ---
 
-## ✨ Key Features
+## Key Features
 
-- ☀️ **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
+- **Solar Energy Inventory**: Tier-1 Monocrystalline Solar Panels, 5.5kW Hybrid Pure Sine Wave Inverters, LiFePO4 Lithium Battery Storage Packs, Gel Deep Cycle Batteries, and 60A MPPT Controllers.
 
 - 🌓 **Adaptive System Theme**: Supports **System Mode**, **Dark Mode** (Obsidian), and **Light Mode** (Alabaster) with zero flash of unstyled content (FOUC).
 - 💬 **1-Click WhatsApp Direct Inquiries**: Instant pre-filled spec inquiry links directly to Sara Power Solution's sales desk (`+251 95 483 4159`).
@@ -28,7 +28,7 @@
 
 ---
 
-## 🏢 Company Profile & Contact
+## Company Profile & Contact
 
 | Detail | Information |
 | :--- | :--- |
@@ -42,7 +42,7 @@
 
 ---
 
-## 📁 Repository Structure
+## Repository Structure
 
 ```
 .
@@ -69,7 +69,7 @@
 
 ---
 
-## 🚀 Quick Start (Local Development)
+## Quick Start (Local Development)
 
 ### 1. Frontend Setup
 
@@ -97,7 +97,7 @@ Backend API will run on [http://localhost:8000](http://localhost:8000).
 
 ---
 
-## 🌐 1-Click Deployment Guide
+## 1-Click Deployment Guide
 
 ### Host Frontend on Vercel
 1. Push repository to GitHub.
@@ -116,6 +116,6 @@ Backend API will run on [http://localhost:8000](http://localhost:8000).
 
 ---
 
-## 📜 License
+## License
 
 Distributed under the MIT License. Copyright © 2026 **Sara Power Solution plc**. All rights reserved.
