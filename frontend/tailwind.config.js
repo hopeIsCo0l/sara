@@ -9,6 +9,13 @@ module.exports = {
   theme: {
     extend: {
       colors: {
+        sara: {
+          red: '#6f0f10',
+          redLight: '#8f1416',
+          redDark: '#4a0a0b',
+          redHover: '#841213',
+          redGlow: 'rgba(111, 15, 16, 0.5)',
+        },
         kith: {
           bg: 'var(--kith-bg)',
           subBg: 'var(--kith-sub-bg)',
@@ -31,16 +38,9 @@ module.exports = {
           overlayBg: 'var(--kith-overlay-bg)',
         },
       },
-      fontFamily: {
-        mono: ['var(--font-geist-mono)', 'monospace'],
-        sans: ['var(--font-inter)', 'sans-serif'],
-      },
       letterSpacing: {
-        superwide: '0.25em',
-        kith: '0.18em',
-      },
-      gridTemplateColumns: {
-        'catalog-4': 'repeat(4, minmax(0, 1fr))',
+        kith: '0.15em',
+        superwide: '0.3em',
       },
     },
   },

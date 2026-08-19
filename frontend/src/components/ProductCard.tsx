@@ -19,10 +19,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
   const secondaryImage = product.images.find((img) => !img.is_primary)?.url || primaryImage;
 
   const stockBadgeStyles = {
-    in_stock: 'border-emerald-500/30 text-emerald-400 bg-emerald-500/10 shadow-[0_0_10px_rgba(16,185,129,0.2)]',
-    low_stock: 'border-amber-500/30 text-amber-400 bg-amber-500/10 shadow-[0_0_10px_rgba(245,158,11,0.2)]',
-    preorder: 'border-purple-500/30 text-purple-400 bg-purple-500/10 shadow-[0_0_10px_rgba(168,85,247,0.2)]',
-    sold_out: 'border-red-500/30 text-red-400 bg-red-500/10 shadow-[0_0_10px_rgba(239,68,68,0.2)]',
+    in_stock: 'border-emerald-500/30 text-emerald-500 dark:text-emerald-400 bg-emerald-500/10 shadow-sm',
+    low_stock: 'border-amber-500/30 text-amber-500 dark:text-amber-400 bg-amber-500/10 shadow-sm',
+    preorder: 'border-purple-500/30 text-purple-500 dark:text-purple-400 bg-purple-500/10 shadow-sm',
+    sold_out: 'border-red-500/30 text-red-500 dark:text-red-400 bg-red-500/10 shadow-sm',
   };
 
   const stockLabels = {
@@ -39,15 +39,15 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
       onMouseLeave={() => setIsHovered(false)}
     >
       {/* Scanline overlay on hover */}
-      <div className="absolute inset-0 bg-[linear-gradient(rgba(6,182,212,0.05)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 mix-blend-overlay"></div>
+      <div className="absolute inset-0 bg-[linear-gradient(rgba(111,15,16,0.05)_1px,transparent_1px)] bg-[size:100%_4px] pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity z-20 mix-blend-overlay"></div>
 
       {/* Image Display */}
-      <div className="relative aspect-[4/3] w-full bg-black overflow-hidden border-b border-cyan-500/20 p-4">
+      <div className="relative aspect-[4/3] w-full bg-black overflow-hidden border-b border-sara-red/20 p-4">
         {/* Corner Brackets */}
-        <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-cyan-500/50 z-10"></div>
-        <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-cyan-500/50 z-10"></div>
-        <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-cyan-500/50 z-10"></div>
-        <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-cyan-500/50 z-10"></div>
+        <div className="absolute top-2 left-2 w-4 h-4 border-t border-l border-sara-red/50 z-10"></div>
+        <div className="absolute top-2 right-2 w-4 h-4 border-t border-r border-sara-red/50 z-10"></div>
+        <div className="absolute bottom-2 left-2 w-4 h-4 border-b border-l border-sara-red/50 z-10"></div>
+        <div className="absolute bottom-2 right-2 w-4 h-4 border-b border-r border-sara-red/50 z-10"></div>
 
         <Image
           src={isHovered ? secondaryImage : primaryImage}
@@ -69,11 +69,11 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
         </div>
 
         {/* Hover Quick View Overlay Action */}
-        <div className="absolute inset-0 bg-kith-bg/60 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 p-4 z-10">
+        <div className="absolute inset-0 bg-kith-bg/70 backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-center justify-center gap-3 p-4 z-10">
           {onQuickView && (
             <button
               onClick={() => onQuickView(product)}
-              className="flex-1 py-2 px-4 bg-cyan-500/20 text-cyan-400 border border-cyan-500/50 hover:bg-cyan-500/40 text-[10px] font-mono font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(6,182,212,0.3)]"
+              className="flex-1 py-2 px-4 bg-sara-red/20 text-sara-red dark:text-red-300 border border-sara-red/60 hover:bg-sara-red hover:text-white text-[10px] font-mono font-bold uppercase tracking-widest flex items-center justify-center gap-2 transition-colors shadow-[0_0_15px_rgba(111,15,16,0.3)]"
             >
               <Eye className="w-3.5 h-3.5" />
               QUERY_DATA
@@ -84,7 +84,7 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
             href={`${WHATSAPP_LINK}?text=${encodeURIComponent(`[SECURE_COMMS] Requesting specs for HW_UNIT: ${product.name} (SKU: ${product.sku || 'N/A'})`)}`}
             target="_blank"
             rel="noopener noreferrer"
-            className="p-2 bg-emerald-500/20 text-emerald-400 border border-emerald-500/50 hover:bg-emerald-500/40 transition-colors shadow-[0_0_15px_rgba(16,185,129,0.3)]"
+            className="p-2 bg-sara-red/20 text-sara-red dark:text-red-400 border border-sara-red/50 hover:bg-sara-red hover:text-white transition-colors shadow-[0_0_15px_rgba(111,15,16,0.3)]"
             title="Contact via COMMS"
           >
             <Phone className="w-4 h-4" />
@@ -96,10 +96,10 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
       <div className="p-5 flex flex-col justify-between flex-1 bg-kith-subBg/40 relative z-10">
         <div>
           {/* Category & Details */}
-          <div className="flex items-center justify-between text-[9px] font-mono font-bold tracking-superwide text-cyan-500/70 uppercase mb-3">
+          <div className="flex items-center justify-between text-[9px] font-mono font-bold tracking-superwide text-sara-red dark:text-red-400 uppercase mb-3">
             <span className="flex items-center gap-1.5"><Terminal className="w-3 h-3" /> {product.category?.name || 'CLASS_UNDEF'}</span>
             {product.details?.material && (
-              <span className="truncate max-w-[120px] text-emerald-500/70">
+              <span className="truncate max-w-[120px] text-kith-muted">
                 {product.details.material}
               </span>
             )}
@@ -107,21 +107,21 @@ export const ProductCard: React.FC<ProductCardProps> = ({ product, onQuickView }
 
           {/* Title */}
           <Link href={`/catalog/${product.slug}`}>
-            <h3 className="text-sm font-black font-mono tracking-widest text-kith-bone line-clamp-2 group-hover:text-cyan-400 transition-colors uppercase">
+            <h3 className="text-sm font-black font-mono tracking-widest text-kith-bone line-clamp-2 group-hover:text-sara-red dark:group-hover:text-red-400 transition-colors uppercase">
               {product.name}
             </h3>
           </Link>
         </div>
 
-        <div className="mt-4 pt-4 border-t border-cyan-500/20 flex items-center justify-between">
-          <span className="text-[10px] font-mono font-bold text-emerald-400 uppercase tracking-superwide flex items-center gap-1.5 text-glow-emerald">
-            <Phone className="w-3 h-3 text-emerald-400" />
+        <div className="mt-4 pt-4 border-t border-sara-red/20 flex items-center justify-between">
+          <span className="text-[10px] font-mono font-bold text-sara-red dark:text-red-400 uppercase tracking-superwide flex items-center gap-1.5">
+            <Phone className="w-3 h-3" />
             REQUEST_ESTIMATE
           </span>
 
           <Link
             href={`/catalog/${product.slug}`}
-            className="w-7 h-7 bg-cyan-500/10 border border-cyan-500/30 flex items-center justify-center text-cyan-400 group-hover:bg-cyan-500/30 group-hover:shadow-[0_0_10px_rgba(6,182,212,0.4)] transition-all"
+            className="w-7 h-7 bg-sara-red/10 border border-sara-red/30 flex items-center justify-center text-sara-red dark:text-red-400 group-hover:bg-sara-red group-hover:text-white group-hover:shadow-[0_0_10px_rgba(111,15,16,0.4)] transition-all"
           >
             <ArrowRight className="w-3.5 h-3.5" />
           </Link>

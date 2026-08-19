@@ -6,7 +6,9 @@ export const SHORT_ABOUT_US = 'Sara Power Solution plc is a premier supplier bas
 
 export const PRIMARY_EMAIL = 'mube@gmail.com';
 export const SECONDARY_EMAIL = 'mube123@gmail.com';
+export const OFFICIAL_EMAIL = PRIMARY_EMAIL;
 export const PRIMARY_PHONE = '+251 95 483 4159';
+export const SECONDARY_PHONE = '+251 91 123 4567';
 export const WHATSAPP_NUMBER = '251954834159';
 export const WHATSAPP_LINK = `https://wa.me/${WHATSAPP_NUMBER}`;
 
@@ -20,3 +22,13 @@ export const TELEGRAM_LINK = 'https://t.me/sebrtradebot';
 
 export const TELEGRAM_BOT_USERNAME = process.env.NEXT_PUBLIC_TELEGRAM_BOT_USERNAME || 'sebrtradebot';
 export const TELEGRAM_BOT_URL = `https://t.me/${TELEGRAM_BOT_USERNAME}`;
+
+export const SEARCH_KEYWORDS = [
+  'Solar Panels',
+  'Hybrid Inverters',
+  'LiFePO4 Lithium Battery',
+  'Solar Energy Addis Ababa',
+  'Sara Power Solution',
+  'Solar Water Pumping',
+  'Solar Irrigation Ethiopia',
+];

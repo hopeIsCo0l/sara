@@ -3,40 +3,108 @@
 @tailwind utilities;
 
 @layer base {
-  :root {
-    /* SURPRISE: HIGH-TECH DASHBOARD THEME */
-    --kith-bg: #030712; /* Deep space black/gray */
-    --kith-subBg: #0b1120; /* Slightly lighter deep tech blue */
-    --kith-card: rgba(15, 23, 42, 0.6); /* Glassmorphism translucent slate */
-    --kith-border: rgba(30, 58, 138, 0.4); /* Glowy blue border */
+  :root, html.dark {
+    /* SARA POWER RED & WHITE DARK THEME */
+    --kith-bg: #080404; /* Deep obsidian space with subtle crimson tone */
+    --kith-sub-bg: #120708; /* Deep rich dark wine/sub-bg */
+    --kith-card: rgba(22, 9, 10, 0.85); /* Translucent dark wine glass card */
+    --kith-inner-card: rgba(38, 15, 17, 0.65);
+    --kith-border: rgba(111, 15, 16, 0.4); /* Sara Red #6f0f10 border */
+    --kith-border-light: rgba(143, 20, 22, 0.65);
     
-    --kith-bone: #f8fafc; /* Stark bright white for high contrast */
-    --kith-muted: #94a3b8; /* Slate 400 */
-    --kith-darkMuted: #475569; /* Slate 600 */
+    --kith-bone: #ffffff; /* Stark pure white text */
+    --kith-offwhite: #f8fafc;
+    --kith-muted: #cbd5e1; /* Slate 300 */
+    --kith-dark-muted: #94a3b8; /* Slate 400 */
     
-    --kith-accent: #06b6d4; /* High-tech Cyan 500 */
+    --kith-accent: #6f0f10; /* Sara Red #6f0f10 */
     
-    /* Primary buttons become glowing cyan panels */
-    --kith-btnPrimaryBg: rgba(6, 182, 212, 0.15);
-    --kith-btnPrimaryHover: rgba(6, 182, 212, 0.3);
-    --kith-btnPrimaryText: #22d3ee; /* Cyan 400 */
+    /* Primary buttons */
+    --kith-btn-primary-bg: #6f0f10;
+    --kith-btn-primary-hover: #8f1416;
+    --kith-btn-primary-text: #ffffff;
+    
+    /* Secondary buttons */
+    --kith-btn-secondary-bg: rgba(22, 9, 10, 0.9);
+    --kith-btn-secondary-text: #ffffff;
+    --kith-btn-secondary-border: rgba(111, 15, 16, 0.5);
+    --kith-btn-secondary-hover: rgba(111, 15, 16, 0.25);
+    --kith-overlay-bg: rgba(8, 4, 4, 0.9);
+
+    /* CamelCase aliases */
+    --kith-subBg: var(--kith-sub-bg);
+    --kith-innerCard: var(--kith-inner-card);
+    --kith-borderLight: var(--kith-border-light);
+    --kith-darkMuted: var(--kith-dark-muted);
+    --kith-btnPrimaryBg: var(--kith-btn-primary-bg);
+    --kith-btnPrimaryHover: var(--kith-btn-primary-hover);
+    --kith-btnPrimaryText: var(--kith-btn-primary-text);
+  }
+
+  html.light {
+    /* SARA POWER RED & WHITE LIGHT THEME */
+    --kith-bg: #ffffff; /* Pure stark white */
+    --kith-sub-bg: #faf6f6; /* Subtle warm white tone */
+    --kith-card: #ffffff; /* White card */
+    --kith-inner-card: #f5efef;
+    --kith-border: rgba(111, 15, 16, 0.22); /* Clean Sara Red border */
+    --kith-border-light: rgba(111, 15, 16, 0.45);
+    
+    --kith-bone: #0f0505; /* High-contrast obsidian dark text */
+    --kith-offwhite: #1a0a0b;
+    --kith-muted: #64748b; /* Slate 500 */
+    --kith-dark-muted: #94a3b8; /* Slate 400 */
+    
+    --kith-accent: #6f0f10; /* Sara Red #6f0f10 */
+    
+    /* Primary buttons */
+    --kith-btn-primary-bg: #6f0f10;
+    --kith-btn-primary-hover: #8f1416;
+    --kith-btn-primary-text: #ffffff;
+    
+    /* Secondary buttons */
+    --kith-btn-secondary-bg: #ffffff;
+    --kith-btn-secondary-text: #0f0505;
+    --kith-btn-secondary-border: rgba(111, 15, 16, 0.3);
+    --kith-btn-secondary-hover: #faf4f4;
+    --kith-overlay-bg: rgba(15, 5, 5, 0.6);
+
+    /* CamelCase aliases */
+    --kith-subBg: var(--kith-sub-bg);
+    --kith-innerCard: var(--kith-inner-card);
+    --kith-borderLight: var(--kith-border-light);
+    --kith-darkMuted: var(--kith-dark-muted);
+    --kith-btnPrimaryBg: var(--kith-btn-primary-bg);
+    --kith-btnPrimaryHover: var(--kith-btn-primary-hover);
+    --kith-btnPrimaryText: var(--kith-btn-primary-text);
   }
 }
 
 @layer base {
   html, body {
-    @apply bg-kith-bg text-kith-bone selection:bg-cyan-500/30 selection:text-cyan-200 antialiased min-h-screen overflow-x-hidden;
-    background-image: 
-      radial-gradient(circle at top right, rgba(6, 182, 212, 0.05) 0%, transparent 40%),
-      radial-gradient(circle at bottom left, rgba(16, 185, 129, 0.03) 0%, transparent 40%),
-      linear-gradient(rgba(30, 58, 138, 0.05) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(30, 58, 138, 0.05) 1px, transparent 1px);
-    background-size: 100% 100%, 100% 100%, 30px 30px, 30px 30px;
+    @apply bg-kith-bg text-kith-bone selection:bg-[#6f0f10]/30 selection:text-red-100 antialiased min-h-screen overflow-x-hidden;
+    background-size: 100% 100%, 100% 100%, 32px 32px, 32px 32px;
     background-attachment: fixed;
-    /* Adding a tech grid to the background */
+    transition: background-color 0.25s ease, color 0.25s ease;
   }
 
-  /* Custom Tech Scrollbar */
+  html.dark body, body {
+    background-image: 
+      radial-gradient(circle at top right, rgba(111, 15, 16, 0.15) 0%, transparent 50%),
+      radial-gradient(circle at bottom left, rgba(143, 20, 22, 0.08) 0%, transparent 50%),
+      linear-gradient(rgba(111, 15, 16, 0.1) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111, 15, 16, 0.1) 1px, transparent 1px);
+  }
+
+  html.light body {
+    background-image: 
+      radial-gradient(circle at top right, rgba(111, 15, 16, 0.08) 0%, transparent 50%),
+      radial-gradient(circle at bottom left, rgba(143, 20, 22, 0.04) 0%, transparent 50%),
+      linear-gradient(rgba(111, 15, 16, 0.08) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(111, 15, 16, 0.08) 1px, transparent 1px);
+  }
+
+  /* Custom Red & White Tech Scrollbar */
   ::-webkit-scrollbar {
     width: 6px;
     height: 6px;
@@ -45,10 +113,11 @@
     background: var(--kith-bg);
   }
   ::-webkit-scrollbar-thumb {
-    background: rgba(6, 182, 212, 0.3);
+    background: rgba(111, 15, 16, 0.4);
+    border-radius: 3px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: var(--kith-accent);
+    background: #8f1416;
   }
 }
 
@@ -61,22 +130,28 @@
     letter-spacing: 0.3em;
   }
 
-  /* Glassmorphism Panel */
+  /* Glassmorphism Panel with Red Accent */
   .tech-panel {
-    @apply bg-kith-card backdrop-blur-md border border-kith-border shadow-[0_0_15px_rgba(6,182,212,0.05)] transition-all duration-300;
+    @apply bg-kith-card backdrop-blur-md border border-kith-border transition-all duration-300;
+    box-shadow: 0 4px 20px -2px rgba(0, 0, 0, 0.06), 0 0 15px rgba(111, 15, 16, 0.08);
   }
   
   .tech-panel:hover {
-    @apply border-cyan-500/50 shadow-[0_0_20px_rgba(6,182,212,0.15)];
+    @apply border-sara-red/70;
+    box-shadow: 0 8px 25px -2px rgba(0, 0, 0, 0.12), 0 0 20px rgba(111, 15, 16, 0.25);
   }
 
-  /* Neon Glowing Text */
+  /* Glowing Neon Text and Shadows */
+  .text-glow-red {
+    text-shadow: 0 0 10px rgba(111, 15, 16, 0.7), 0 0 20px rgba(143, 20, 22, 0.4);
+  }
+  
   .text-glow-cyan {
-    text-shadow: 0 0 10px rgba(6,182,212,0.5);
+    text-shadow: 0 0 10px rgba(111, 15, 16, 0.5);
   }
   
   .text-glow-emerald {
-    text-shadow: 0 0 10px rgba(16,185,129,0.5);
+    text-shadow: 0 0 10px rgba(16, 185, 129, 0.4);
   }
 
   /* Hide arrows on number inputs */

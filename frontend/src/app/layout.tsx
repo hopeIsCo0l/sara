@@ -1,81 +1,29 @@
-import React from 'react';
 import type { Metadata } from 'next';
 import { Inter } from 'next/font/google';
 import '@/styles/globals.css';
 import { Navbar } from '@/components/Navbar';
 import { Footer } from '@/components/Footer';
 import { ThemeProvider } from '@/context/ThemeContext';
+import {
+  COMPANY_NAME,
+  BRAND_TAGLINE,
+  SEARCH_KEYWORDS,
+  PHYSICAL_ADDRESS,
+  PRIMARY_PHONE,
+} from '@/lib/constants';
 
-const inter = Inter({
-  subsets: ['latin'],
-  variable: '--font-inter',
-  display: 'swap',
-});
+const inter = Inter({ subsets: ['latin'] });
 
 export const metadata: Metadata = {
-  title: {
-    default: 'Sara Power Solution plc // Solar Energy Equipment Showcase',
-    template: '%s | Sara Power Solution plc',
-  },
-  description: 'Premier supplier in Addis Ababa, Ethiopia. Tier-1 Solar Panels, Hybrid Pure Sine Wave Inverters, and LiFePO4 Lithium Batteries.',
-  keywords: [
-    'Sara Power Solution plc',
-    'Solar Energy Ethiopia',
-    'Solar Panels Addis Ababa',
-    'Hybrid Inverters Ethiopia',
-    'Lithium LiFePO4 Battery',
-    'Solar Sizing Calculator',
-  ],
-  authors: [{ name: 'Sara Power Solution plc' }],
-  creator: 'Sara Power Solution plc Engineering',
-  publisher: 'Sara Power Solution plc',
-  metadataBase: new URL('https://sarapowersolution.et'),
-  alternates: {
-    canonical: '/',
-  },
+  title: `${COMPANY_NAME} | Tier-1 Solar Inverters, Lithium Batteries & Panels`,
+  description: `${BRAND_TAGLINE}. Discover high-efficiency hybrid solar inverters, LiFePO4 lithium batteries, and engineering installation services in Addis Ababa, Ethiopia.`,
+  keywords: SEARCH_KEYWORDS,
   openGraph: {
+    title: `${COMPANY_NAME} | Solar Energy Systems`,
+    description: `Leading supplier of solar inverters, lithium batteries, and engineering installations in Addis Ababa, Ethiopia.`,
     type: 'website',
-    locale: 'en_US',
-    url: 'https://sarapowersolution.et',
-    title: 'Sara Power Solution plc // Solar Energy Systems',
-    description: 'Explore high-efficiency solar panels, hybrid inverters, and lithium batteries in Addis Ababa, Ethiopia.',
-    siteName: 'Sara Power Solution plc',
-    images: [
-      {
-        url: 'https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1200&auto=format&fit=crop',
-        width: 1200,
-        height: 630,
-        alt: 'Sara Power Solution Solar Equipment Showcase',
-      },
-    ],
-  },
-  twitter: {
-    card: 'summary_large_image',
-    title: 'Sara Power Solution plc // Solar Equipment',
-    description: 'Tier-1 Solar Panels, Hybrid Inverters, and Lithium Battery Banks in Ethiopia.',
-    images: ['https://images.unsplash.com/photo-1509391366360-2e959784a276?q=80&w=1200&auto=format&fit=crop'],
-  },
-  robots: {
-    index: true,
-    follow: true,
   },
 };
-
-const themeScript = `
-  (function() {
-    try {
-      var theme = localStorage.getItem('kith_theme') || 'system';
-      var isDark = theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches);
-      if (isDark) {
-        document.documentElement.classList.add('dark');
-        document.documentElement.classList.remove('light');
-      } else {
-        document.documentElement.classList.add('light');
-        document.documentElement.classList.remove('dark');
-      }
-    } catch (e) {}
-  })();
-`;
 
 export default function RootLayout({
   children,
@@ -83,15 +31,38 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html lang="en" className={`${inter.variable}`} suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <head>
-        <script dangerouslySetInnerHTML={{ __html: themeScript }} />
+        <script
+          dangerouslySetInnerHTML={{
+            __html: `
+              (function() {
+                try {
+                  var saved = localStorage.getItem('sara-theme');
+                  var prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+                  var theme = saved || 'system';
+                  var isDark = theme === 'dark' || (theme === 'system' && prefersDark);
+                  var root = document.documentElement;
+                  if (isDark) {
+                    root.classList.add('dark');
+                    root.classList.remove('light');
+                  } else {
+                    root.classList.add('light');
+                    root.classList.remove('dark');
+                  }
+                } catch (e) {}
+              })();
+            `,
+          }}
+        />
       </head>
-      <body className="min-h-screen bg-kith-bg text-kith-bone flex flex-col selection:bg-white selection:text-black transition-colors duration-200">
+      <body className={inter.className}>
         <ThemeProvider>
-          <Navbar />
-          <main className="flex-1 w-full">{children}</main>
-          <Footer />
+          <div className="flex flex-col min-h-screen">
+            <Navbar />
+            <main className="flex-grow">{children}</main>
+            <Footer />
+          </div>
         </ThemeProvider>
       </body>
     </html>

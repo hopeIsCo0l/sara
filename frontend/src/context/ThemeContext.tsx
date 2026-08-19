@@ -6,8 +6,8 @@ export type Theme = 'dark' | 'light' | 'system';
 
 interface ThemeContextType {
   theme: Theme;
-  setTheme: (theme: Theme) => void;
   resolvedTheme: 'dark' | 'light';
+  setTheme: (theme: Theme) => void;
 }
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
@@ -19,52 +19,55 @@ export const ThemeProvider: React.FC<{ children: React.ReactNode }> = ({ childre
 
   useEffect(() => {
     setMounted(true);
-    const savedTheme = (localStorage.getItem('kith_theme') as Theme) || 'system';
-    setThemeState(savedTheme);
+    const savedTheme = localStorage.getItem('sara-theme') as Theme | null;
+    if (savedTheme && (savedTheme === 'dark' || savedTheme === 'light' || savedTheme === 'system')) {
+      setThemeState(savedTheme);
+    }
   }, []);
 
   useEffect(() => {
     if (!mounted) return;
 
-    const root = document.documentElement;
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-
+    
     const applyTheme = () => {
-      let activeTheme: 'dark' | 'light' = 'dark';
+      let active: 'dark' | 'light' = 'dark';
       if (theme === 'system') {
-        activeTheme = mediaQuery.matches ? 'dark' : 'light';
+        active = mediaQuery.matches ? 'dark' : 'light';
       } else {
-        activeTheme = theme;
+        active = theme;
       }
 
-      setResolvedTheme(activeTheme);
-
-      if (activeTheme === 'light') {
-        root.classList.remove('dark');
-        root.classList.add('light');
-      } else {
-        root.classList.remove('light');
+      setResolvedTheme(active);
+      const root = document.documentElement;
+      if (active === 'dark') {
         root.classList.add('dark');
+        root.classList.remove('light');
+      } else {
+        root.classList.add('light');
+        root.classList.remove('dark');
       }
     };
 
     applyTheme();
-    localStorage.setItem('kith_theme', theme);
 
-    const handleChange = () => {
-      if (theme === 'system') applyTheme();
+    const listener = () => {
+      if (theme === 'system') {
+        applyTheme();
+      }
     };
 
-    mediaQuery.addEventListener('change', handleChange);
-    return () => mediaQuery.removeEventListener('change', handleChange);
+    mediaQuery.addEventListener('change', listener);
+    return () => mediaQuery.removeEventListener('change', listener);
   }, [theme, mounted]);
 
   const setTheme = (newTheme: Theme) => {
     setThemeState(newTheme);
+    localStorage.setItem('sara-theme', newTheme);
   };
 
   return (
-    <ThemeContext.Provider value={{ theme, setTheme, resolvedTheme }}>
+    <ThemeContext.Provider value={{ theme, resolvedTheme, setTheme }}>
       {children}
     </ThemeContext.Provider>
   );

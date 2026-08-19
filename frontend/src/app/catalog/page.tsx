@@ -6,7 +6,7 @@ import { Category, FilterState, Product } from '@/lib/types';
 import { FilterSidebar } from '@/components/FilterSidebar';
 import { ProductGrid } from '@/components/ProductGrid';
 import { QuickViewModal } from '@/components/QuickViewModal';
-import { Zap, Sun } from 'lucide-react';
+import { Zap, Sun, Terminal } from 'lucide-react';
 
 export default function CatalogPage() {
   const [categories, setCategories] = useState<Category[]>([]);
@@ -82,19 +82,20 @@ export default function CatalogPage() {
   }, [allProducts, filters]);
 
   return (
-    <div className="bg-gray-50 pb-20">
+    <div className="bg-kith-bg pb-24 transition-colors">
       {/* Header Banner */}
-      <div className="bg-white border-b border-gray-200 pt-10 pb-8">
+      <div className="border-b border-sara-red/30 bg-kith-subBg/80 pt-12 pb-10 relative overflow-hidden">
+        <div className="absolute top-0 right-0 w-80 h-80 bg-sara-red/10 rounded-full blur-3xl pointer-events-none -z-10" />
         <div className="max-w-[1700px] mx-auto px-4 sm:px-8 space-y-4">
-          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-red-50 text-kith-accent rounded-full text-[10px] font-bold tracking-widest uppercase">
-            <Sun className="w-3.5 h-3.5" />
-            Sara Power Solution plc // Full Catalog
+          <div className="inline-flex items-center gap-1.5 px-3 py-1 bg-sara-red/10 border border-sara-red/30 text-sara-red dark:text-red-400 rounded-sm text-[10px] font-mono font-bold tracking-widest uppercase">
+            <Terminal className="w-3.5 h-3.5" />
+            Sara Power Solution // Hardware Registry
           </div>
-          <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight text-gray-900 uppercase">
-            Solar Equipment Showcase
+          <h1 className="text-3xl sm:text-5xl font-black font-mono tracking-widest text-kith-bone uppercase">
+            Solar Equipment Catalog
           </h1>
-          <p className="text-sm text-gray-500 max-w-2xl font-medium">
-            Filter through our Tier-1 solar panels, hybrid pure sine wave inverters, and LiFePO4 lithium batteries.
+          <p className="text-sm font-mono text-kith-muted max-w-2xl">
+            Browse our inventory of Tier-1 monocrystalline solar panels, hybrid pure sine wave inverters, and LiFePO4 lithium batteries.
           </p>
         </div>
       </div>
@@ -112,21 +113,21 @@ export default function CatalogPage() {
 
           <div className="flex-1 space-y-6">
             {/* FR-2 Solar Calculator Callout Banner */}
-            <div className="p-6 bg-white rounded-2xl border border-gray-100 shadow-sm hover:shadow transition-shadow flex flex-col sm:flex-row sm:items-center justify-between gap-6">
+            <div className="p-6 tech-panel rounded-sm border border-sara-red/30 flex flex-col sm:flex-row sm:items-center justify-between gap-6">
               <div className="space-y-2">
-                <div className="text-xs text-amber-600 uppercase tracking-widest font-bold flex items-center gap-1.5">
+                <div className="text-xs font-mono text-amber-500 uppercase tracking-widest font-bold flex items-center gap-1.5">
                   <Zap className="w-4 h-4 animate-pulse" />
-                  Unsure about solar sizing?
+                  Unsure about solar system sizing?
                 </div>
-                <p className="text-sm text-gray-500 font-medium max-w-xl">
-                  Use our interactive Solar Calculator to enter your appliances or kW load and get an exact equipment match.
+                <p className="text-xs font-mono text-kith-muted max-w-xl">
+                  Use our interactive Solar Calculator to input your appliances and calculate your exact inverter and battery requirements.
                 </p>
               </div>
               <a
                 href="/calculator"
-                className="px-6 py-3 bg-amber-500 hover:bg-amber-400 text-white text-sm font-bold rounded-full flex items-center justify-center gap-2 flex-shrink-0 transition-colors shadow-md hover:shadow-lg"
+                className="px-6 py-2.5 bg-sara-red hover:bg-sara-redLight text-white text-xs font-mono font-bold tracking-widest uppercase rounded-sm flex items-center justify-center gap-2 flex-shrink-0 transition-all shadow-[0_0_15px_rgba(111,15,16,0.3)]"
               >
-                <span>Launch Calculator</span>
+                <span>Launch Sizer</span>
                 <span>→</span>
               </a>
             </div>
